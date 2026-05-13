@@ -222,6 +222,9 @@ public:
 		std::cout << "Vida: " << vida << "/" << vidaMaxima << std::endl;
 		std::cout << "Danio: " << danio << std::endl;
 		std::cout << "Nivel: " << nivel << std::endl;
+		std::cout << "Oro: " << oro << std::endl;
+		std::cout << "Espada actual: " << espadaEquipada << std::endl;
+		std::cout << "Armadura actual: " << armaduraEquipada << std::endl;
 	}
 
 	// Regresa la cantidad de oro actual del heroe.
@@ -991,14 +994,15 @@ public:
 
 		// Este while mantiene al jugador en la zona de descanso
 		// hasta que elija continuar.
-		while (opcion != 5) {
+		while (opcion != 6) {
 			std::cout << std::endl;
 			std::cout << "----- ZONA DE DESCANSO -----" << std::endl;
 			std::cout << "1. Tienda" << std::endl;
-			std::cout << "2. Inventario" << std::endl;
-			std::cout << "3. Descansar" << std::endl;
-			std::cout << "4. Buffarse" << std::endl;
-			std::cout << "5. Continuar" << std::endl;
+			std::cout << "2. Estado de Heroe" << std::endl;
+			std::cout << "3. Inventario" << std::endl;
+			std::cout << "4. Descansar" << std::endl;
+			std::cout << "5. Buffarse" << std::endl;
+			std::cout << "6. Continuar" << std::endl;
 
 			opcion = pedirNumero("Seleccione una opcion:");
 
@@ -1006,20 +1010,23 @@ public:
 			if (opcion == 1) {
 				menuTienda();
 			}
+			if (opcion == 2) {
+				heroe.mostrarEstadoHeroe();
+			}
 			// Este else if abre el inventario de descanso.
-			else if (opcion == 2) {
+			else if (opcion == 3) {
 				inventarioDescanso();
 			}
 			// Este else if cura completamente al heroe.
-			else if (opcion == 3) {
+			else if (opcion == 4) {
 				heroe.curarCompleto();
 				std::cout << "Descansaste y recuperaste toda tu vida." << std::endl;
 			}
 			// Este else if activa el buff temporal de daño.
-			else if (opcion == 4) {
+			else if (opcion == 5) {
 				heroe.activarBuffCampamento();
 			}
-			else if (opcion == 5) {
+			else if (opcion == 6) {
 				std::cout << "\nContinuando la aventura..." << std::endl;
 			}
 			else {

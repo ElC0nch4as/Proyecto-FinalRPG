@@ -679,6 +679,7 @@ public:
 					equipo[opcion - 1].restarCantidad(1);
 
 					std::cout << "Gracias por su compra." << std::endl;
+					std::cout << "Oro restante: " << heroe.obtenerOro() << std::endl;
 				}
 				else {
 					std::cout << "No tienes oro suficiente." << std::endl;

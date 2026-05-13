@@ -438,19 +438,35 @@ public:
 			return;
 		}
 
-		// Este if revisa si el objeto es una espada.
-		if (inventario[posicion].obtenerTipo() == "espada") {
-			danio -= bonoEspada;
-			bonoEspada = inventario[posicion].obtenerValor();
+		std::string nombreItem = inventario[posicion].obtenerNombre();
+		std::string tipoItem = inventario[posicion].obtenerTipo();
+		int valorItem = inventario[posicion].obtenerValor();
+
+		if (tipoItem == "espada") {
+			// Si ya habia una espada equipada, regresa al inventario
+			if (espadaEquipada != "Ninguna") {
+				agregarItem(Item(espadaEquipada, "espada", bonoEspada, 0, 1));
+				danio -= bonoEspada;
+			}
+
+			bonoEspada = valorItem;
 			danio += bonoEspada;
-			espadaEquipada = inventario[posicion].obtenerNombre();
+			espadaEquipada = nombreItem;
+
+			inventario.erase(inventario.begin() + posicion);
 
 			std::cout << "Equipaste " << espadaEquipada << "." << std::endl;
 		}
-		// Este else if revisa si el objeto es una armadura.
-		else if (inventario[posicion].obtenerTipo() == "armadura") {
-			bonoArmadura = inventario[posicion].obtenerValor();
-			armaduraEquipada = inventario[posicion].obtenerNombre();
+		else if (tipoItem == "armadura") {
+			// Si ya habia una armadura equipada, regresa al inventario
+			if (armaduraEquipada != "Ninguna") {
+				agregarItem(Item(armaduraEquipada, "armadura", bonoArmadura, 0, 1));
+			}
+
+			bonoArmadura = valorItem;
+			armaduraEquipada = nombreItem;
+
+			inventario.erase(inventario.begin() + posicion);
 
 			std::cout << "Equipaste " << armaduraEquipada << "." << std::endl;
 		}

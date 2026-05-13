@@ -493,17 +493,40 @@ public:
 // En este avance se enfoca en vender poushons. (Por ahora)
 class Tienda {
 	std::vector<Item> poushons;
+	std::vector<Item> equipo;
 
 public:
 	// Constructor de la tienda.
 	// Aqui se crean las poushons disponibles.
 	Tienda() {
+		equipo.push_back(Item("Espada oxidada", "espada", 3, 40, 1));
+		equipo.push_back(Item("Espada de acero", "espada", 6, 80, 1));
+		equipo.push_back(Item("Espada legendaria", "espada", 10, 120, 1));
+
+		equipo.push_back(Item("Armadura rota", "armadura", 1, 30, 1));
+		equipo.push_back(Item("Armadura de hierro", "armadura", 2, 60, 1));
+		equipo.push_back(Item("Armadura divina", "armadura", 3, 100, 1));
+
 		poushons.push_back(Item("Poushon salud", "poushon", 20, 20, 3));
 		poushons.push_back(Item("Poushon mana", "poushon", 10, 15, 3));
 		poushons.push_back(Item("Poushon fuerza", "poushon", 2, 25, 2));
 		poushons.push_back(Item("Poushon veneno", "poushon", 5, 15, 2));
 		poushons.push_back(Item("Poushon hielo", "poushon", 5, 15, 2));
 		poushons.push_back(Item("Poushon fuego", "poushon", 5, 15, 2));
+	}
+
+	void mostrarEquipo() {
+		std::cout << "----- EQUIPO -----" << std::endl;
+
+		for (int i = 0; i < 6; i++) {
+			if (equipo[i].obtenerCantidad() > 0) {
+				std::cout << "Stock " << i + 1 << " - " << equipo[i].obtenerNombre()
+					<< " | Precio: " << equipo[i].obtenerPrecio() << std::endl;
+			}
+			else {
+				std::cout << "STOCK " << i + 1 << " - VACIO" << std::endl;
+			}
+		}
 	}
 
 	// Muestra el estante visual de poushons.
@@ -616,6 +639,41 @@ public:
 			}
 
 			std::cout << std::endl << std::endl;
+		}
+	}
+
+	// Permite comprar una poushon si hay stock y oro suficiente.
+	void comprarEquipo(Heroe& heroe) {
+		mostrarEquipo();
+		int opcion = pedirNumero("Que equipo deseas comprar?");
+
+		if (opcion >= 1 && opcion <= 6) {
+			if (equipo[opcion - 1].obtenerCantidad() > 0) {
+				if (heroe.obtenerOro() >= equipo[opcion - 1].obtenerPrecio()) {
+					heroe.descontarOro(equipo[opcion - 1].obtenerPrecio());
+
+					heroe.agregarItem(Item(
+						equipo[opcion - 1].obtenerNombre(),
+						equipo[opcion - 1].obtenerTipo(),
+						equipo[opcion - 1].obtenerValor(),
+						equipo[opcion - 1].obtenerPrecio(),
+						1
+					));
+
+					equipo[opcion - 1].restarCantidad(1);
+
+					std::cout << "Gracias por su compra." << std::endl;
+				}
+				else {
+					std::cout << "No tienes oro suficiente." << std::endl;
+				}
+			}
+			else {
+				std::cout << "Ese stock esta vacio." << std::endl;
+			}
+		}
+		else {
+			std::cout << "Opcion invalida." << std::endl;
 		}
 	}
 
@@ -810,20 +868,22 @@ public:
 	void menuTienda() {
 		int opcion = 0;
 
-		// Este while mantiene abierta la tienda hasta que el jugador salga.
-		while (opcion != 2) {
+		while (opcion != 3) {
 			std::cout << std::endl;
 			std::cout << "----- TIENDA -----" << std::endl;
-			std::cout << "1. Poushons" << std::endl;
-			std::cout << "2. Salir de la tienda" << std::endl;
+			std::cout << "1. Equipo" << std::endl;
+			std::cout << "2. Poushons" << std::endl;
+			std::cout << "3. Salir de la tienda" << std::endl;
 
 			opcion = pedirNumero("Seleccione una opcion:");
 
-			// Este if abre la compra de poushons.
 			if (opcion == 1) {
-				tienda.comprarPoushon(heroe);
+				tienda.comprarEquipo(heroe);
 			}
 			else if (opcion == 2) {
+				tienda.comprarPoushon(heroe);
+			}
+			else if (opcion == 3) {
 				std::cout << "Saliendo de la tienda." << std::endl;
 			}
 			else {

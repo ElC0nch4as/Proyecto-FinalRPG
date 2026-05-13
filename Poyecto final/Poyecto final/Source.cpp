@@ -698,9 +698,7 @@ public:
 		mostrarPoushons();
 		int opcion = pedirNumero("Que Poushon deseas comprar?");
 
-		// Este if valida que la opcion elegida este dentro del rango permitido.
 		if (opcion >= 1 && opcion <= 6) {
-			// Este if comprueba que aun haya stock del producto elegido.
 			if (poushons[opcion - 1].obtenerCantidad() > 0) {
 				std::cout << "Poushon seleccionada: " << poushons[opcion - 1].obtenerNombre() << std::endl;
 				std::cout << "Precio: " << poushons[opcion - 1].obtenerPrecio() << std::endl;
@@ -708,25 +706,38 @@ public:
 
 				int confirmar = pedirNumero("1. Comprar\n2. Salir");
 
-				// Este if confirma la compra.
 				if (confirmar == 1) {
-					// Este if comprueba si el heroe tiene suficiente oro.
-					if (heroe.obtenerOro() >= poushons[opcion - 1].obtenerPrecio()) {
-						heroe.descontarOro(poushons[opcion - 1].obtenerPrecio());
-						heroe.agregarItem(Item(
-							poushons[opcion - 1].obtenerNombre(),
-							poushons[opcion - 1].obtenerTipo(),
-							poushons[opcion - 1].obtenerValor(),
-							poushons[opcion - 1].obtenerPrecio(),
-							1
-						));
-						poushons[opcion - 1].restarCantidad(1);
+					int cantidadCompra = pedirNumero("Cuantas deseas comprar?");
 
-						std::cout << "Gracias por su compra." << std::endl;
-						std::cout << "Oro restante: " << heroe.obtenerOro() << std::endl;
+					if (cantidadCompra <= 0) {
+						std::cout << "Cantidad invalida." << std::endl;
+					}
+					else if (cantidadCompra > poushons[opcion - 1].obtenerCantidad()) {
+						std::cout << "No hay suficiente stock." << std::endl;
 					}
 					else {
-						std::cout << "No tienes oro suficiente." << std::endl;
+						int costoTotal = poushons[opcion - 1].obtenerPrecio() * cantidadCompra;
+
+						if (heroe.obtenerOro() >= costoTotal) {
+							heroe.descontarOro(costoTotal);
+
+							heroe.agregarItem(Item(
+								poushons[opcion - 1].obtenerNombre(),
+								poushons[opcion - 1].obtenerTipo(),
+								poushons[opcion - 1].obtenerValor(),
+								poushons[opcion - 1].obtenerPrecio(),
+								cantidadCompra
+							));
+
+							poushons[opcion - 1].restarCantidad(cantidadCompra);
+
+							std::cout << "Gracias por su compra." << std::endl;
+							std::cout << "Compraste " << cantidadCompra << " unidad(es)." << std::endl;
+							std::cout << "Oro restante: " << heroe.obtenerOro() << std::endl;
+						}
+						else {
+							std::cout << "No tienes oro suficiente." << std::endl;
+						}
 					}
 				}
 			}

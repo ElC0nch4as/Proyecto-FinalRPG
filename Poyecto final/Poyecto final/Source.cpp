@@ -357,6 +357,60 @@ public:
 		return "";
 	}
 
+	void mostrarInformacionObjeto(int posicion) {
+		if (!slotValidoInventario(posicion)) {
+			std::cout << "Opcion invalida." << std::endl;
+			return;
+		}
+
+		std::string nombreItem = inventario[posicion].obtenerNombre();
+		std::string tipoItem = inventario[posicion].obtenerTipo();
+		int valorItem = inventario[posicion].obtenerValor();
+		int precioItem = inventario[posicion].obtenerPrecio();
+		int cantidadItem = inventario[posicion].obtenerCantidad();
+
+		std::cout << "----- INFORMACION DEL OBJETO -----" << std::endl;
+		std::cout << "Nombre: " << nombreItem << std::endl;
+		std::cout << "Precio: " << precioItem << std::endl;
+		std::cout << "Cantidad: " << cantidadItem << std::endl;
+
+		if (nombreItem == "Poushon salud") {
+			std::cout << "Descripcion: Cura al HEROE." << std::endl;
+			std::cout << "Curacion exacta: +" << valorItem << " de vida." << std::endl;
+		}
+		else if (nombreItem == "Poushon fuerza") {
+			std::cout << "Descripcion: Aumenta el danio del HEROE." << std::endl;
+			std::cout << "Aumento exacto: +" << valorItem << " de danio." << std::endl;
+		}
+		else if (nombreItem == "Poushon fuego") {
+			std::cout << "Descripcion: Poushon ofensiva de fuego." << std::endl;
+			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
+		}
+		else if (nombreItem == "Poushon hielo") {
+			std::cout << "Descripcion: Poushon ofensiva de hielo." << std::endl;
+			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
+		}
+		else if (nombreItem == "Poushon veneno") {
+			std::cout << "Descripcion: Poushon ofensiva de veneno." << std::endl;
+			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
+		}
+		else if (nombreItem == "Poushon mana") {
+			std::cout << "Descripcion: Poushon misteriosa." << std::endl;
+			std::cout << "Valor interno: " << valorItem << "." << std::endl;
+		}
+		else if (tipoItem == "espada") {
+			std::cout << "Descripcion: Arma que aumenta el ataque del HEROE." << std::endl;
+			std::cout << "Bono exacto: +" << valorItem << " de danio." << std::endl;
+		}
+		else if (tipoItem == "armadura") {
+			std::cout << "Descripcion: Equipo defensivo." << std::endl;
+			std::cout << "Bono exacto: +" << valorItem << " de defensa/proteccion." << std::endl;
+		}
+		else {
+			std::cout << "Descripcion: Objeto sin informacion registrada." << std::endl;
+		}
+	}
+
 	// Elimina un item si su cantidad ya llego a cero.
 	void eliminarItemSiCantidadCero(int posicion) {
 		// Este if valida primero que la posicion exista.
@@ -787,6 +841,7 @@ public:
 			std::cout << std::endl;
 			heroe.mostrarInventario();
 			std::cout << "1. Seleccionar objeto" << std::endl;
+			std::cout << "2. Informacion de object" << std::endl;
 			std::cout << "2. Salir del inventario" << std::endl;
 
 			opcion = pedirNumero("Que deseas hacer?");
@@ -821,6 +876,15 @@ public:
 				}
 			}
 			else if (opcion == 2) {
+				std::cout << std::endl;
+				heroe.mostrarInventarioNumerado();
+
+				int slot = pedirNumero("De que objeto quieres ver la informacion?");
+				slot--;
+
+				heroe.mostrarInformacionObjeto(slot);
+			}
+			else if (opcion == 3) {
 				std::cout << "Saliendo del inventario." << std::endl;
 			}
 			else {
@@ -839,8 +903,9 @@ public:
 			heroe.mostrarInventario();
 			std::cout << "1. Usar objeto" << std::endl;
 			std::cout << "2. Equipar objeto" << std::endl;
-			std::cout << "3. Descartar objeto" << std::endl;
-			std::cout << "4. Salir del inventario" << std::endl;
+			std::cout << "3. Informacion de objeto" << std::endl;
+			std::cout << "4. Descartar objeto" << std::endl;
+			std::cout << "5. Salir del inventario" << std::endl;
 
 			opcion = pedirNumero("Que desea hacer?");
 
@@ -884,8 +949,17 @@ public:
 					heroe.equiparObjeto(slot);
 				}
 			}
-			// Este else if permite descartar un objeto.
 			else if (opcion == 3) {
+				std::cout << std::endl;
+				heroe.mostrarInventarioNumerado();
+
+				int slot = pedirNumero("De que objeto quieres ver la informacion?");
+				slot--;
+
+				heroe.mostrarInformacionObjeto(slot);
+			}
+			// Este else if permite descartar un objeto.
+			else if (opcion == 4) {
 				std::cout << std::endl;
 				heroe.mostrarInventarioNumerado();
 
@@ -893,7 +967,7 @@ public:
 				slot--;
 				heroe.descartarObjeto(slot);
 			}
-			else if (opcion == 4) {
+			else if (opcion == 5) {
 				std::cout << "Saliendo del inventario." << std::endl;
 			}
 			else {

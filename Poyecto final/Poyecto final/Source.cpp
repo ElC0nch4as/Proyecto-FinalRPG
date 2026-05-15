@@ -837,12 +837,12 @@ public:
 		int opcion = 0;
 
 		// Este while mantiene abierto el inventario hasta que el jugador decida salir.
-		while (opcion != 2) {
+		while (opcion != 3) {
 			std::cout << std::endl;
 			heroe.mostrarInventario();
 			std::cout << "1. Seleccionar objeto" << std::endl;
 			std::cout << "2. Informacion de object" << std::endl;
-			std::cout << "2. Salir del inventario" << std::endl;
+			std::cout << "3. Salir del inventario" << std::endl;
 
 			opcion = pedirNumero("Que deseas hacer?");
 
@@ -898,7 +898,7 @@ public:
 		int opcion = 0;
 
 		// Este while mantiene abierto el inventario hasta que el jugador decida salir.
-		while (opcion != 4) {
+		while (opcion != 5) {
 			std::cout << std::endl;
 			heroe.mostrarInventario();
 			std::cout << "1. Usar objeto" << std::endl;

@@ -227,6 +227,13 @@ public:
 		std::cout << "Armadura actual: " << armaduraEquipada << std::endl;
 	}
 
+	void mostrarEstadoCombate() {
+		std::cout << "===== HEROE =====" << std::endl;
+		std::cout << "Vida: " << vida << "/" << vidaMaxima << std::endl;
+		std::cout << "Danio: " << danio << std::endl;
+		std::cout << "Nivel: " << nivel << std::endl;
+	}
+
 	// Regresa la cantidad de oro actual del heroe.
 	int obtenerOro() {
 		return oro;
@@ -932,7 +939,7 @@ public:
 		// Este while mantiene el combate activo mientras ambos sigan con vida.
 		while (heroe.estaVivo() && enemigo.estaVivo()) {
 			std::cout << std::endl;
-			heroe.mostrarEstadoHeroe();
+			heroe.mostrarEstadoCombate();
 			std::cout << "\nEnemigo: " << enemigo.obtenerNombre() << std::endl;
 			std::cout << "Vida enemigo: " << enemigo.obtenerVida() << "/" << enemigo.obtenerVidaMaxima() << std::endl;
 			std::cout << "Danio enemigo: " << enemigo.obtenerDanio() << std::endl;

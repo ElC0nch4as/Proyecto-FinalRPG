@@ -235,6 +235,10 @@ public:
 		std::cout << "Nivel: " << nivel << std::endl;
 	}
 
+	int obtenerBonoArmadura() {
+		return bonoArmadura;
+	}
+
 	// Regresa la cantidad de oro actual del heroe.
 	int obtenerOro() {
 		return oro;
@@ -1068,8 +1072,22 @@ public:
 			}
 
 			// Si el enemigo sigue vivo, entonces le toca atacar.
-			std::cout << enemigo.obtenerNombre() << " ataca y hace " << enemigo.obtenerDanio() << " de danio." << std::endl;
-			heroe.recibirDanio(enemigo.obtenerDanio());
+			int danioEnemigo = enemigo.obtenerDanio();
+			int defensaHeroe = heroe.obtenerBonoArmadura();
+			int danioReal = danioEnemigo - defensaHeroe;
+
+			if (danioReal < 0) {
+				danioReal = 0;
+			}
+
+			std::cout << enemigo.obtenerNombre() << " ataca y hace " << danioEnemigo << " de danio." << std::endl;
+
+			if (defensaHeroe > 0) {
+				std::cout << "Tu armadura reduce " << defensaHeroe << " de danio." << std::endl;
+			}
+
+			std::cout << "Danio recibido: " << danioReal << std::endl;
+			heroe.recibirDanio(danioReal);
 			std::cout << "Vida restante del HEROE: " << heroe.obtenerVida() << std::endl;
 
 			// Este if revisa si el heroe murio despues del turno del enemigo.

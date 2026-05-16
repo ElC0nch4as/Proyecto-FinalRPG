@@ -44,6 +44,7 @@ int pedirNumero(std::string mensaje) {
 	int numero;
 
 	// Se muestra el mensaje que indica que numero debe escribir el usuario.
+	std::cout << std::endl;
 	std::cout << mensaje << std::endl;
 
 	// Este while sirve para repetir la lectura hasta que el usuario
@@ -840,11 +841,13 @@ public:
 		while (opcion != 3) {
 			std::cout << std::endl;
 			heroe.mostrarInventario();
+			std::cout << std::endl;
 			std::cout << "1. Seleccionar objeto" << std::endl;
 			std::cout << "2. Informacion de object" << std::endl;
 			std::cout << "3. Salir del inventario" << std::endl;
 
 			opcion = pedirNumero("Que deseas hacer?");
+			std::cout << std::endl;
 
 			// Este if permite seleccionar un objeto del inventario.
 			if (opcion == 1) {
@@ -853,6 +856,8 @@ public:
 
 				int slot = pedirNumero("Que objeto deseas seleccionar?");
 				slot--;
+
+				std::cout << std::endl;
 
 				// Este if valida que el slot exista.
 				if (!heroe.slotValidoInventario(slot)) {
@@ -882,6 +887,7 @@ public:
 				int slot = pedirNumero("De que objeto quieres ver la informacion?");
 				slot--;
 
+				std::cout << std::endl;
 				heroe.mostrarInformacionObjeto(slot);
 			}
 			else if (opcion == 3) {
@@ -901,6 +907,7 @@ public:
 		while (opcion != 5) {
 			std::cout << std::endl;
 			heroe.mostrarInventario();
+			std::cout << std::endl;
 			std::cout << "1. Usar objeto" << std::endl;
 			std::cout << "2. Equipar objeto" << std::endl;
 			std::cout << "3. Informacion de objeto" << std::endl;
@@ -908,6 +915,7 @@ public:
 			std::cout << "5. Salir del inventario" << std::endl;
 
 			opcion = pedirNumero("Que desea hacer?");
+			std::cout << std::endl;
 
 			// Este if permite usar un objeto.
 			if (opcion == 1) {
@@ -916,6 +924,8 @@ public:
 
 				int slot = pedirNumero("Que objeto deseas usar?");
 				slot--;
+
+				std::cout << std::endl;
 
 				// Este if valida que el slot exista.
 				if (!heroe.slotValidoInventario(slot)) {
@@ -941,6 +951,8 @@ public:
 				int slot = pedirNumero("Que objeto deseas equipar?");
 				slot--;
 
+				std::cout << std::endl;
+
 				// Este if valida que el slot exista.
 				if (!heroe.slotValidoInventario(slot)) {
 					std::cout << "Opcion invalida." << std::endl;
@@ -956,6 +968,7 @@ public:
 				int slot = pedirNumero("De que objeto quieres ver la informacion?");
 				slot--;
 
+				std::cout << std::endl;
 				heroe.mostrarInformacionObjeto(slot);
 			}
 			// Este else if permite descartar un objeto.
@@ -965,6 +978,8 @@ public:
 
 				int slot = pedirNumero("Que objeto deseas descartar?");
 				slot--;
+
+				std::cout << std::endl;
 				heroe.descartarObjeto(slot);
 			}
 			else if (opcion == 5) {

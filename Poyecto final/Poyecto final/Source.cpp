@@ -1095,10 +1095,28 @@ public:
 					std::cout << "Opcion invalida." << std::endl;
 				}
 				else {
+					std::string nombreItem = heroe.obtenerNombreItemInventario(slot);
 					std::string tipoItem = heroe.obtenerTipoItemInventario(slot);
 
-					// Este if usa una poushon fuera de combate.
-					if (tipoItem == "poushon") {
+					if (nombreItem == "PIMPI") {
+						int opcionPIMPI = 0;
+						std::cout << "1. Consumir" << std::endl;
+						std::cout << "2. Salir" << std::endl;
+
+						opcionPIMPI = pedirNumero("Que deseas hacer con PIMPI?");
+						std::cout << std::endl;
+
+						if (opcionPIMPI == 1) {
+							heroe.comerPIMPI();
+						}
+						else if (opcionPIMPI == 2) {
+							std::cout << "Saliendo." << std::endl;
+						}
+						else {
+							std::cout << "Opcion invalida." << std::endl;
+						}
+					}
+					else if (tipoItem == "poushon") {
 						heroe.usarPoushonFueraDeCombate(slot);
 					}
 					else {

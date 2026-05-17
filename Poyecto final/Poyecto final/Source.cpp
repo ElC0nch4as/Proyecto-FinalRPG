@@ -72,15 +72,17 @@ class Item {
 	int valor;
 	int precio;
 	int cantidad;
+	bool secreto;
 
 public:
 	// Constructor del item.
-	Item(std::string param_nombre, std::string param_tipo, int param_valor, int param_precio, int param_cantidad) {
+	Item(std::string param_nombre, std::string param_tipo, int param_valor, int param_precio, int param_cantidad, bool param_secreto) {
 		nombre = param_nombre;
 		tipo = param_tipo;
 		valor = param_valor;
 		precio = param_precio;
 		cantidad = param_cantidad;
+		secreto = param_secreto;
 	}
 
 	// Metodos getter para obtener informacion del item.
@@ -102,6 +104,10 @@ public:
 
 	int obtenerCantidad() {
 		return cantidad;
+	}
+
+	bool esSecreto() {
+		return secreto;
 	}
 
 	// Suma cantidad al item, por ejemplo al comprar repetido.
@@ -514,7 +520,7 @@ public:
 		if (tipoItem == "espada") {
 			// Si ya habia una espada equipada, regresa al inventario
 			if (espadaEquipada != "Ninguna") {
-				agregarItem(Item(espadaEquipada, "espada", bonoEspada, 0, 1));
+				agregarItem(Item(espadaEquipada, "espada", bonoEspada, 0, 1, false));
 				danio -= bonoEspada;
 			}
 
@@ -529,7 +535,7 @@ public:
 		else if (tipoItem == "armadura") {
 			// Si ya habia una armadura equipada, regresa al inventario
 			if (armaduraEquipada != "Ninguna") {
-				agregarItem(Item(armaduraEquipada, "armadura", bonoArmadura, 0, 1));
+				agregarItem(Item(armaduraEquipada, "armadura", bonoArmadura, 0, 1, false));
 			}
 
 			bonoArmadura = valorItem;
@@ -584,20 +590,21 @@ public:
 	// Constructor de la tienda.
 	// Aqui se crean las poushons disponibles.
 	Tienda() {
-		equipo.push_back(Item("Espada oxidada", "espada", 3, 40, 1));
-		equipo.push_back(Item("Espada de acero", "espada", 6, 80, 1));
-		equipo.push_back(Item("Espada legendaria", "espada", 10, 120, 1));
+		equipo.push_back(Item("Espada oxidada", "espada", 3, 40, 1, false));
+		equipo.push_back(Item("Espada de acero", "espada", 6, 80, 1, false));
+		equipo.push_back(Item("Espada legendaria", "espada", 10, 120, 1, false));
 
-		equipo.push_back(Item("Armadura rota", "armadura", 1, 30, 1));
-		equipo.push_back(Item("Armadura de hierro", "armadura", 2, 60, 1));
-		equipo.push_back(Item("Armadura divina", "armadura", 3, 100, 1));
+		equipo.push_back(Item("Armadura rota", "armadura", 1, 30, 1, false));
+		equipo.push_back(Item("Armadura de hierro", "armadura", 2, 60, 1, false));
+		equipo.push_back(Item("Armadura divina", "armadura", 3, 100, 1, false));
 
-		poushons.push_back(Item("Poushon salud", "poushon", 20, 20, 3));
-		poushons.push_back(Item("Poushon mana", "poushon", 10, 15, 3));
-		poushons.push_back(Item("Poushon fuerza", "poushon", 2, 25, 2));
-		poushons.push_back(Item("Poushon veneno", "poushon", 5, 15, 2));
-		poushons.push_back(Item("Poushon hielo", "poushon", 5, 15, 2));
-		poushons.push_back(Item("Poushon fuego", "poushon", 5, 15, 2));
+		poushons.push_back(Item("Poushon salud", "poushon", 20, 20, 3, false));
+		poushons.push_back(Item("Poushon mana", "poushon", 10, 15, 3, false));
+		poushons.push_back(Item("Poushon fuerza", "poushon", 2, 25, 2, false));
+		poushons.push_back(Item("Poushon veneno", "poushon", 5, 15, 2, false));
+		poushons.push_back(Item("Poushon hielo", "poushon", 5, 15, 2, false));
+		poushons.push_back(Item("Poushon fuego", "poushon", 5, 15, 2, false));
+		poushons.push_back(Item("¿¿¿¿¿?????", "especial", 0, 10, 1, true));
 	}
 
 	void mostrarEquipo() {
@@ -637,6 +644,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("                                                   7", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -651,6 +663,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -665,6 +682,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -679,6 +701,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -694,6 +721,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -708,6 +740,11 @@ public:
 					std::cout << "|";
 				}
 			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
+			}
+
 			std::cout << std::endl;
 
 			for (int j = i; j < i + 3 && j < 6; j++) {
@@ -721,6 +758,10 @@ public:
 				if (j < i + 2) {
 					std::cout << "|";
 				}
+			}
+
+			if (i == 0 && poushons[6].obtenerCantidad() > 0) {
+				std::cout << centrarTexto("", 20);
 			}
 
 			std::cout << std::endl << std::endl;
@@ -742,7 +783,8 @@ public:
 						equipo[opcion - 1].obtenerTipo(),
 						equipo[opcion - 1].obtenerValor(),
 						equipo[opcion - 1].obtenerPrecio(),
-						1
+						1,
+						false
 					));
 
 					equipo[opcion - 1].restarCantidad(1);
@@ -768,12 +810,19 @@ public:
 		mostrarPoushons();
 		int opcion = pedirNumero("Que Poushon deseas comprar?");
 
-		if (opcion >= 1 && opcion <= 6) {
+		if (opcion >= 1 && opcion <= 7) {
 			if (poushons[opcion - 1].obtenerCantidad() > 0) {
-				std::cout << "Poushon seleccionada: " << poushons[opcion - 1].obtenerNombre() << std::endl;
-				std::cout << "Precio: " << poushons[opcion - 1].obtenerPrecio() << std::endl;
-				std::cout << "Stock disponible: " << poushons[opcion - 1].obtenerCantidad() << std::endl;
-
+				if (opcion == 7) {
+					std::cout << "Poushon seleccionada: ???" << std::endl;
+					std::cout << "Descripcion: ±N@ΩIñ|F°¿L¹¯E" << std::endl;
+					std::cout << "Precio: 10" << std::endl;
+					std::cout << "Stock disponible: 1" << std::endl;
+				}
+				else {
+					std::cout << "Poushon seleccionada: " << poushons[opcion - 1].obtenerNombre() << std::endl;
+					std::cout << "Precio: " << poushons[opcion - 1].obtenerPrecio() << std::endl;
+					std::cout << "Stock disponible: " << poushons[opcion - 1].obtenerCantidad() << std::endl;
+				}
 				int confirmar = pedirNumero("1. Comprar\n2. Salir");
 
 				if (confirmar == 1) {
@@ -796,7 +845,8 @@ public:
 								poushons[opcion - 1].obtenerTipo(),
 								poushons[opcion - 1].obtenerValor(),
 								poushons[opcion - 1].obtenerPrecio(),
-								cantidadCompra
+								cantidadCompra,
+								poushons[opcion - 1].esSecreto()
 							));
 
 							poushons[opcion - 1].restarCantidad(cantidadCompra);

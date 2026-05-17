@@ -254,12 +254,56 @@ public:
 		std::cout << "Nivel: " << nivel << std::endl;
 	}
 
-	bool getTienePIMPI() {
+	bool getPIMPI() {
 		return PIMPI;
 	}
 
-	bool getPimpiAlimentado() {
+	bool getPIMPIComido() {
 		return PIMPIAlimentado;
+	}
+
+	void usarPIMPIDesdeInventarioCombate() {
+		usodePIMPI();
+	}
+
+	void comersePIMPIDesdeInventarioCombate() {
+		comerPIMPI();
+	}
+
+	void comerPIMPI() {
+		if (PIMPI) {
+			curarCantidad(10);
+			PIMPI = false;
+			PIMPIComido = true;
+
+			for (int i = 0; i < inventario.size(); i++) {
+				if (inventario[i].obtenerNombre() == "PIMPI") {
+					inventario.erase(inventario.begin() + i);
+					break;
+				}
+			}
+
+			std::cout << "Consumiste a PIMPI, recuperas 10 de vida." << std::endl;
+			std::cout << "Te recuperaste un poco fisicamente pero te sientes deprimido." << std::endl;
+		}
+		else {
+			std::cout << "Ya no esta PIMPI." << std::endl;
+		}
+	}
+
+	void usodePIMPI() {
+		if (PIMPI && !PIMPIActivo) {
+			danio += 1;
+			PIMPIActivo = true;
+			PIMPIEquipado = true;
+			std::cout << "Usaste a PIMPI. Tu danio aumento +1 durante este combate." << std::endl;
+		}
+		else if (!PIMPI) {
+			std::cout << "Ya no esta PIMPI." << std::endl;
+		}
+		else {
+			std::cout << "PIMPI ya esta siendo usado en este combate." << std::endl;
+		}
 	}
 
 	int obtenerBonoArmadura() {
@@ -939,10 +983,34 @@ public:
 					std::cout << "Opcion invalida." << std::endl;
 				}
 				else {
+					std::string nombreItem = heroe.obtenerNombreItemInventario(slot);
 					std::string tipoItem = heroe.obtenerTipoItemInventario(slot);
 
-					// Este if permite usar una poushon en combate.
-					if (tipoItem == "poushon") {
+					if (nombreItem == "PIMPI") {
+						int opcionPIMPI = 0;
+						std::cout << "1. Usar" << std::endl;
+						std::cout << "2. Consumir" << std::endl;
+						std::cout << "3. Salir" << std::endl;
+
+						opcionPIMPI = pedirNumero("Que deseas hacer con PIMPI?");
+						std::cout << std::endl;
+
+						if (opcionPIMPI == 1) {
+							heroe.usarPIMPIDesdeInventarioCombate();
+							break;
+						}
+						else if (opcionPIMPI == 2) {
+							heroe.comersePIMPIDesdeInventarioCombate();
+							break;
+						}
+						else if (opcionPIMPI == 3) {
+							std::cout << "Saliendo." << std::endl;
+						}
+						else {
+							std::cout << "Opcion invalida." << std::endl;
+						}
+					}
+					else if (tipoItem == "poushon") {
 						heroe.usarPoushonEnCombate(slot);
 						break;
 					}

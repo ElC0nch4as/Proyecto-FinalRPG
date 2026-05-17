@@ -306,6 +306,26 @@ public:
 		}
 	}
 
+	void terminarUsoPIMPI() {
+		if (PIMPIActivo) {
+			danio -= 1;
+			PIMPIActivo = false;
+			PIMPI = false;
+
+			for (int i = 0; i < inventario.size(); i++) {
+				if (inventario[i].obtenerNombre() == "PIMPI") {
+					inventario.erase(inventario.begin() + i);
+					break;
+				}
+			}
+
+			std::cout << std::endl;
+			std::cout << "PIMPI lucho con gran valor durante el combate..." << std::endl;
+			std::cout << "pero desafortunadamente sus heridas fueron graves." << std::endl;
+			std::cout << "PIMPI murio por lesiones severas..." << std::endl;
+		}
+	}
+
 	int obtenerBonoArmadura() {
 		return bonoArmadura;
 	}
@@ -1207,6 +1227,7 @@ public:
 				}
 
 				heroe.terminarBuffCampamento();
+				heroe.terminarUsoPIMPI();
 				return true;
 			}
 

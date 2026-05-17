@@ -200,6 +200,12 @@ class Heroe : public Personaje {
 	int oro;
 
 	bool buffCampamentoActivo;
+	bool PIMPIActivo;
+
+	bool PIMPI;
+	bool PIMPIComido;
+	bool PIMPIEquipado;
+	bool PIMPIAlimentado;
 
 	int bonoEspada;
 	int bonoArmadura;
@@ -217,10 +223,17 @@ public:
 		experiencia = 0;
 		oro = param_oro;
 		buffCampamentoActivo = false;
+		PIMPIActivo = false;
+		PIMPI = true;
+		PIMPIComido = false;
+		PIMPIEquipado = false;
+		PIMPIAlimentado = false;
 		bonoEspada = 0;
 		bonoArmadura = 0;
 		espadaEquipada = "Ninguna";
 		armaduraEquipada = "Ninguna";
+
+		inventario.push_back(Item("PIMPI", "PIMPI", 0, 0, 1, false));
 	}
 
 	// Muestra el estado del heroe durante el combate.
@@ -239,6 +252,14 @@ public:
 		std::cout << "Vida: " << vida << "/" << vidaMaxima << std::endl;
 		std::cout << "Danio: " << danio << std::endl;
 		std::cout << "Nivel: " << nivel << std::endl;
+	}
+
+	bool getTienePIMPI() {
+		return PIMPI;
+	}
+
+	bool getPimpiAlimentado() {
+		return PIMPIAlimentado;
 	}
 
 	int obtenerBonoArmadura() {

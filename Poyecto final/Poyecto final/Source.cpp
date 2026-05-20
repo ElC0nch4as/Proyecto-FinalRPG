@@ -258,7 +258,7 @@ public:
 		return PIMPI;
 	}
 
-	bool getPIMPIComido() {
+	bool getPIMPIAlimentado() {
 		return PIMPIAlimentado;
 	}
 
@@ -1381,6 +1381,11 @@ public:
 		if (!heroe.estaVivo()) {
 			std::cout << "\n----- FINAL MALO -----" << std::endl;
 			std::cout << "El HEROE murio y el reino fue destruido." << std::endl;
+		}
+		else if (heroe.getPIMPIAlimentado() && heroe.getPIMPI()) {
+			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
+			std::cout << "PIMPI se ............................." << std::endl;
+			std::cout << "y termina con ............................." << std::endl;
 		}
 		else {
 			std::cout << "\n----- FINAL BUENO -----" << std::endl;

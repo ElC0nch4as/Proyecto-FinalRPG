@@ -326,6 +326,40 @@ public:
 		}
 	}
 
+	void usarObjetoSecretoDesdeInventario(int posicion) {
+		usarObjetoSecreto(posicion);
+	}
+
+	void usarObjetoSecreto(int posicion) {
+		if (!slotValidoInventario(posicion)) {
+			return;
+		}
+
+		int opcion = 0;
+		std::cout << "1. Usar en Heroe" << std::endl;
+		std::cout << "2. Usar en PIMPI" << std::endl;
+
+		opcion = pedirNumero("En quien deseas usarlo?");
+
+		if (opcion == 1) {
+			std::cout << "No paso nada..." << std::endl;
+			inventario.erase(inventario.begin() + posicion);
+		}
+		else if (opcion == 2) {
+			if (PIMPI) {
+				PIMPIAlimentado = true;
+				std::cout << "PIMPI consumio  ???" << std::endl;
+				inventario.erase(inventario.begin() + posicion);
+			}
+			else {
+				std::cout << "Ya no esta PIMPI." << std::endl;
+			}
+		}
+		else {
+			std::cout << "Opcion invalida." << std::endl;
+		}
+	}
+
 	int obtenerBonoArmadura() {
 		return bonoArmadura;
 	}
@@ -1128,6 +1162,9 @@ public:
 					}
 					else if (tipoItem == "poushon") {
 						heroe.usarPoushonFueraDeCombate(slot);
+					}
+					else if (tipoItem == "especial") {
+						heroe.usarObjetoSecretoDesdeInventario(slot);
 					}
 					else {
 						std::cout << "Ese objeto no se usa asi." << std::endl;

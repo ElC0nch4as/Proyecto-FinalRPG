@@ -643,6 +643,16 @@ public:
 			return;
 		}
 
+		if (inventario[posicion].obtenerNombre() == "PIMPI") {
+			PIMPI = false;
+
+			std::cout << "Elegiste descartar a PIMPI de la aventura ya que te parecio inutil" << std::endl;
+			std::cout << "PIMPI triste se aleja de su antiguo amigo entre lagrimas....." << std::endl;
+
+			inventario.erase(inventario.begin() + posicion);
+			return;
+		}
+
 		std::cout << "Descartaste " << inventario[posicion].obtenerNombre() << "." << std::endl;
 		inventario.erase(inventario.begin() + posicion);
 	}

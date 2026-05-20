@@ -1383,11 +1383,17 @@ public:
 			std::cout << "El HEROE murio y el reino fue destruido." << std::endl;
 		}
 		else if (heroe.getPIMPIAlimentado() && heroe.getPIMPI()) {
+			PlaySound(NULL, 0, 0);
+			PlaySound(TEXT("Who Will Know.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+
 			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
 			std::cout << "PIMPI se ............................." << std::endl;
 			std::cout << "y termina con ............................." << std::endl;
 		}
 		else {
+			PlaySound(NULL, 0, 0);
+			PlaySound(TEXT("Stars At Our Backs.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+
 			std::cout << "\n----- FINAL BUENO -----" << std::endl;
 			std::cout << "Derrotaste al Rey Demonio y salvaste el reino." << std::endl;
 		}

@@ -64,6 +64,13 @@ int pedirNumero(std::string mensaje) {
 	return numero;
 }
 
+// Esta funcion pausa el programa hasta que el usuario presione una tecla.
+void PresionaParaContinuar()
+{
+	std::cout << "\n\nPresiona una tecla para continuar...";
+	_getch();
+}
+
 // Esta funcion imprime texto lentamente.
 // Si el usuario presiona una tecla, el texto se muestra completo de golpe.
 void TextoOmitible(std::string texto, int velocidad)
@@ -1415,11 +1422,345 @@ public:
 		}
 		else if (heroe.getPIMPIAlimentado() && heroe.getPIMPI()) {
 			PlaySound(NULL, 0, 0);
+
+			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
+
+			std::string finalOcultoParte1 =
+				"\nAbyssandros finalmente habia caido."
+				"\n\nEl Rey Demonio, partido brutalmente por la mitad, yacia sobre el suelo ennegrecido del salon del trono,"
+				"\nbaniado por su propia sangre, mientras el eco del combate aun parecia temblar en las paredes del castillo."
+				"\nPor un instante, todo quedo en silencio."
+
+				"\n\nNo hubo gritos."
+				"\nNo hubo victoria."
+				"\nNo hubo alivio."
+
+				"\n\nSolo el sonido de la respiracion agitada del HEROE, el peso de la batalla recien terminada..."
+				"\ny la sensacion de que, por fin, aquella guerra habia llegado a su fin."
+
+				"\n\nPero entonces...\n";
+
+			TextoOmitible(finalOcultoParte1, 65);
+			PresionaParaContinuar();
+			system("cls");
+
+			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
+
+			std::string finalOcultoParte2 =
+				"\nun ruido extrano quebro el silencio."
+
+				"\n\nNo provenia del castillo."
+				"\nNo provenia del rey moribundo."
+				"\nNo provenia del HEROE."
+
+				"\n\nProvenia de PIMPI."
+
+				"\n\nAl principio fue apenas un temblor."
+				"\nUna pequena convulsion torpe y antinatural recorrio su diminuto cuerpo."
+				"\nLuego otra."
+				"\nY otra mas."
+
+				"\n\nPIMPI comenzo a retorcerse sobre el suelo, emitiendo sonidos horribles,"
+				"\ncomo si algo dentro de el quisiera abrirse paso a la fuerza."
+				"\nSu pequeno cuerpo se arqueo de una forma imposible."
+				"\nSu piel se hincho."
+				"\nSus extremidades se estiraron de manera grotesca."
+				"\nSus ojos, antes simples y familiares, comenzaron a deformarse hasta perder toda expresion reconocible."
+
+				"\n\nEl HEROE dio un paso hacia atras."
+
+				"\n\nNo entendia lo que estaba viendo."
+
+				"\n\nEl pequeno companero que habia cruzado junto a el montanas, campos de guerra y fortalezas demoniacas..."
+				"\nel ser que habia estado a su lado durante toda la aventura..."
+				"\ncomenzaba a convertirse en una aberracion imposible."
+
+				"\n\nLa carne de PIMPI empezo a desgarrarse y expandirse."
+				"\nBrotaron protuberancias pulsantes a lo largo de su cuerpo."
+				"\nDe ellas nacieron ojos."
+				"\nOjos pequenos, grandes, deformes, humedos, abiertos en todas direcciones."
+				"\nNo habia orden en ellos."
+				"\nNo habia simetria."
+				"\nSolo una multiplicacion enfermiza de miradas que parecian observarlo todo al mismo tiempo."
+
+				"\n\nEntonces surgieron los tentaculos."
+
+				"\n\nPrimero uno."
+				"\nLuego dos."
+				"\nLuego una masa interminable de extremidades viscosas y serpenteantes"
+				"\nque se abrian paso entre los restos de su antiguo cuerpo como si siempre hubieran estado ahi,"
+				"\nesperando el momento oportuno para nacer."
+
+				"\n\nPIMPI siguio creciendo."
+
+				"\n\nRompio el suelo."
+				"\nPartio columnas."
+				"\nDestrozo el techo del salon."
+				"\nSu cuerpo se elevaba y se deformaba sin detenerse, hinchandose y expandiendose"
+				"\nhasta alcanzar un tamano monstruoso, tan vasto que su presencia parecia devorar el propio castillo."
+
+				"\n\nLo que alguna vez fue pequeno y casi ridiculo..."
+				"\nahora se alzaba como una colosal abominacion,"
+				"\nuna masa de carne, ojos y tentaculos que eclipsaba la luz del sol"
+				"\ny hacia temblar toda la fortaleza con cada movimiento.\n";
+
+			TextoOmitible(finalOcultoParte2, 55);
+			PresionaParaContinuar();
+			system("cls");
+
+			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
+
+			std::string finalOcultoParte3 =
+				"\nAbyssandros, aun con vida, alzo lentamente la mirada desde el suelo."
+
+				"\n\nY por primera vez desde que el HEROE lo habia conocido,"
+				"\nel rostro del Rey Demonio mostro algo que jamas habia dejado ver:"
+				"\nhorror absoluto."
+
+				"\n\nSus ojos se abrieron de par en par."
+				"\nNo con rabia."
+				"\nNo con orgullo herido."
+				"\nNo con furia."
+				"\nSino con la impotencia devastadora de quien contempla, al fin, la confirmacion de su peor miedo."
+
+				"\n\nLa leyenda..."
+				"\nla profecia..."
+				"\nel ser que surgiria de la superficie..."
+				"\nel fin prometido para el abismo..."
+
+				"\n\nEra real."
+
+				"\n\nY habia estado ahi todo el tiempo."
+
+				"\n\nAbyssandros intento incorporarse, arrastrando lo que quedaba de su cuerpo"
+				"\ncon una dignidad rota y desesperada, pero ya era demasiado tarde."
+
+				"\n\nUno de los tentaculos descendio lentamente desde las alturas."
+				"\nSe enrosco alrededor del Rey Demonio, aprisionando lo que quedaba de el con una facilidad humillante."
+				"\nAbyssandros no grito."
+				"\nSolo sostuvo aquella mirada de espanto, impotencia y amarga revelacion..."
+
+				"\n\nantes de ser elevado hasta las fauces de la criatura."
+
+				"\n\nAlli, entre pliegues de carne imposible y filas de dientes deformes"
+				"\nque no parecian pertenecer a ningun ser natural,"
+				"\nel soberano del abismo desaparecio para siempre."
+
+				"\n\nEl sonido de la masticacion fue breve."
+				"\nAsqueroso."
+				"\nFinal.\n";
+
+			TextoOmitible(finalOcultoParte3, 55);
+			PresionaParaContinuar();
+			system("cls");
+
+			// Aqui empieza la musica dramatica para los pensamientos del HEROE.
 			PlaySound(TEXT("Who Will Know.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
-			std::cout << "PIMPI se ............................." << std::endl;
-			std::cout << "y termina con ............................." << std::endl;
+
+			std::string finalOcultoParte4A =
+				"\nEl HEROE no podia moverse."
+
+				"\n\nSu cuerpo seguia ahi, de pie, respirando..."
+				"\npero su mente habia quedado completamente destrozada."
+
+				"\n\nNo podia apartar la vista de aquello."
+				"\nNo podia comprenderlo."
+				"\nNo podia aceptarlo."
+
+				"\n\nPIMPI..."
+				"\nsu fiel companero..."
+				"\nsu amigo..."
+				"\nse habia convertido en ese monstruo."
+
+				"\n\nFrente a el, la monstruosidad seguia creciendo, ya inmensa, ya imposible,"
+				"\nya mas alla de cualquier forma de razon o misericordia."
+				"\nA lo lejos, podia ver como aquella cosa destruia el castillo,"
+				"\ndesgarraba la tierra y se alzaba cada vez mas,"
+				"\ncomo si el mundo entero no fuera suficiente para contenerla."
+
+				"\n\nEl antiguo PIMPI..."
+				"\nya no existia."
+
+				"\n\nSolo quedaba el fin."
+
+				"\n\nY por primera vez en toda la aventura, los pensamientos del HEROE se dejaron escuchar."
+
+				"\n\n\"...No...\""
+				"\n\"...No puede ser...\""
+				"\n\"PIMPI...\""
+				"\n\"Tu... no...\""
+				"\n\"¿Que te hice...?\""
+
+				"\n\n\"Yo...\""
+				"\n\"Yo crei que estaba haciendo lo correcto...\""
+				"\n\"Crei que todo esto era por el bien del reino...\""
+				"\n\"Crei que esta aventura era justa...\""
+				"\n\"Crei que solo estabamos derrotando monstruos...\""
+				"\n\"Crei que tu siempre estarias bien...\""
+
+				"\n\nSu respiracion se quebro."
+
+				"\n\n\"Y nunca pense...\""
+				"\n\"nunca me detuve a pensar en ti...\""
+				"\n\"en lo que sentias...\""
+				"\n\"en lo que eras...\""
+				"\n\"en todo lo que te hice cargar durante este viaje...\""
+
+				"\n\nCerro los ojos."
+
+				"\n\nY en aquella oscuridad momentanea, lejos del castillo que se derrumbaba"
+				"\ny del horror que devoraba el mundo, los recuerdos llegaron."
+
+				"\n\nRecuerdos pequenos."
+				"\nSimples."
+				"\nTorpes."
+				"\nPero calidos."
+
+				"\n\nPIMPI acompanandolo en el camino."
+				"\nPIMPI siguiendolo sin dudar."
+				"\nPIMPI estando ahi, incluso cuando nadie mas lo hacia."
+				"\nPIMPI como una presencia constante, inocente, fiel..."
+				"\ncomo si aquella aventura hubiera significado para el"
+				"\nalgo mas que guerra, sangre y muerte."
+
+				"\n\nY entonces el HEROE comprendio algo demasiado tarde."
+
+				"\n\nMientras el pensaba en gloria, victoria y salvacion..."
+				"\nPIMPI solo habia estado a su lado."
+				"\nConfiando."
+
+				"\n\n\"...Yo te traje hasta aqui...\""
+				"\n\"Yo te use...\""
+				"\n\"Yo te arrastre conmigo pensando que todo saldria bien...\""
+				"\n\"Y al final...\""
+				"\n\"al final fui yo quien te convirtio en esto...\""
+
+				"\n\nEl HEROE abrio los ojos."
+
+				"\n\nY entonces....... grito.\n\n";
+
+			TextoOmitible(finalOcultoParte4A, 55);
+
+			std::string gritoFinal =
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"
+				"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n";
+
+			TextoOmitible(gritoFinal, 1);
+
+			std::string puntosFinales =
+				"\n..............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n"
+				"\n";
+
+			TextoOmitible(puntosFinales, 200);
 		}
 		else {
 			PlaySound(NULL, 0, 0);
@@ -1431,17 +1772,10 @@ public:
 	}
 };
 
-// Esta funcion pausa el programa hasta que el usuario presione una tecla.
-void PresionaParaContinuar()
-{
-	std::cout << "\n\nPresiona una tecla para continuar...";
-	_getch();
-} 
-
 int main()
 {
 	// Se crea el heroe principal con vida, daño y oro inicial.
-	Heroe heroe("HEROE", 100, 100, 500);
+	Heroe heroe("HEROE", 100, 300, 500);
 
 	// Se crean los enemigos principales del juego con su vida, daño y experiencia otorgada.
 	Enemigo general1("General 1 - Venedictuz Decimuz", 100, 10, 100);

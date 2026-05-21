@@ -64,6 +64,28 @@ int pedirNumero(std::string mensaje) {
 	return numero;
 }
 
+// Esta funcion imprime texto lentamente.
+// Si el usuario presiona una tecla, el texto se muestra completo de golpe.
+void TextoOmitible(std::string texto, int velocidad)
+{
+	// Este for recorre letra por letra el texto recibido.
+	for (int i = 0; i < texto.size(); i++)
+	{
+		// Este if permite omitir la animacion de escritura si se presiona una tecla.
+		if (_kbhit())
+		{
+			_getch();
+			std::cout << texto.substr(i);
+			std::cout.flush();
+			return;
+		}
+
+		std::cout << texto[i];
+		std::cout.flush();
+		Sleep(velocidad);
+	}
+}
+
 // Clase que representa un item del juego.
 // En este avance se usa sobre todo para el inventario y la tienda.
 class Item {
@@ -248,7 +270,9 @@ public:
 	}
 
 	void mostrarEstadoCombate() {
-		std::cout << "===== HEROE =====" << std::endl;
+		std::cout << std::endl;
+		std::cout << std::endl;
+		std::cout << "----- HEROE -----" << std::endl;
 		std::cout << "Vida: " << vida << "/" << vidaMaxima << std::endl;
 		std::cout << "Danio: " << danio << std::endl;
 		std::cout << "Nivel: " << nivel << std::endl;
@@ -1249,9 +1273,16 @@ public:
 
 	// Sistema principal de combate.
 	// Regresa true si el heroe gana y false si pierde.
-	bool combate(Enemigo& enemigo) {
+	bool combate(Enemigo& enemigo, std::wstring musicaCombate) {
 		std::cout << std::endl;
-		std::cout << "----- COMBATE CONTRA " << enemigo.obtenerNombre() << " -----" << std::endl;
+
+		std::string inicioCombate = "COMBATE CONTRA: " + enemigo.obtenerNombre();
+		TextoOmitible(inicioCombate, 100);
+
+		Sleep(800);
+
+		PlaySound(NULL, 0, 0);
+		PlaySound(musicaCombate.c_str(), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 		// Este while mantiene el combate activo mientras ambos sigan con vida.
 		while (heroe.estaVivo() && enemigo.estaVivo()) {
@@ -1400,28 +1431,6 @@ public:
 	}
 };
 
-// Esta funcion imprime texto lentamente.
-// Si el usuario presiona una tecla, el texto se muestra completo de golpe.
-void TextoOmitible(std::string texto, int velocidad)
-{
-	// Este for recorre letra por letra el texto recibido.
-	for (int i = 0; i < texto.size(); i++)
-	{
-		// Este if permite omitir la animacion de escritura si se presiona una tecla.
-		if (_kbhit())
-		{
-			_getch();
-			std::cout << texto.substr(i);
-			std::cout.flush();
-			return;
-		}
-
-		std::cout << texto[i];
-		std::cout.flush();
-		Sleep(velocidad);
-	}
-}
-
 // Esta funcion pausa el programa hasta que el usuario presione una tecla.
 void PresionaParaContinuar()
 {
@@ -1435,10 +1444,10 @@ int main()
 	Heroe heroe("HEROE", 100, 100, 500);
 
 	// Se crean los enemigos principales del juego con su vida, daño y experiencia otorgada.
-	Enemigo general1("General 1", 100, 10, 100);
-	Enemigo general2("General 2", 200, 15, 100);
-	Enemigo general3("General 3", 300, 20, 100);
-	Enemigo reyDemonio("REY DEMONIO", 500, 30, 0);
+	Enemigo general1("General 1 - Venedictuz Decimuz", 100, 10, 100);
+	Enemigo general2("General 2 - Karg' Aalh", 200, 15, 100);
+	Enemigo general3("General 3 - Zhimingde", 300, 20, 100);
+	Enemigo reyDemonio("Abyssandros - Rey Demonio - Soberano del abismo", 500, 30, 0);
 
 	// Se crea el objeto Juego, que conecta al heroe con enemigos y sistemas del juego.
 	Juego juego(heroe, general1, general2, general3, reyDemonio);
@@ -1526,12 +1535,9 @@ int main()
 
 	system("cls");
 
-	// Comienza la musica del primer jefe.
-	PlaySound(TEXT("Gang-Plank Galleon.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-
 	// Primer combate.
 	// Si pierde, se muestra derrota y termina el programa.
-	if (!juego.combate(general1)) {
+	if (!juego.combate(general1, L"Gang-Plank Galleon.wav")) {
 		PlaySound(NULL, 0, 0);
 		PlaySound(TEXT("Derrota.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		juego.verificarFinal();
@@ -1639,12 +1645,9 @@ int main()
 
 	system("cls");
 
-	// Comienza la musica del segundo jefe.
-	PlaySound(TEXT("Out of Tartarus.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-
 	// Segundo combate.
 	// Si pierde, se muestra derrota y termina el programa.
-	if (!juego.combate(general2)) {
+	if (!juego.combate(general2, L"Out of Tartarus.wav")) {
 		PlaySound(NULL, 0, 0);
 		PlaySound(TEXT("Derrota.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		juego.verificarFinal();
@@ -1753,12 +1756,9 @@ int main()
 	PlaySound(NULL, 0, 0);
 	system("cls");
 
-	// Comienza la musica del tercer jefe.
-	PlaySound(TEXT("Grimm.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-
 	// Tercer combate.
 	// Si pierde, se muestra derrota y termina el programa.
-	if (!juego.combate(general3)) {
+	if (!juego.combate(general3, L"Grimm.wav")) {
 		PlaySound(NULL, 0, 0);
 		PlaySound(TEXT("Derrota.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		juego.verificarFinal();
@@ -1920,12 +1920,7 @@ int main()
 	PlaySound(NULL, 0, 0);
 	system("cls");
 
-	// Comienza la musica del jefe final.
-	PlaySound(TEXT("Bloody Tears.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
-
-	// Combate final contra el Rey Demonio.
-	// Si pierde, se muestra derrota y termina el programa.
-	if (!juego.combate(reyDemonio)) {
+	if (!juego.combate(reyDemonio, L"Bloody Tears.wav")) {
 		PlaySound(NULL, 0, 0);
 		PlaySound(TEXT("Derrota.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		juego.verificarFinal();

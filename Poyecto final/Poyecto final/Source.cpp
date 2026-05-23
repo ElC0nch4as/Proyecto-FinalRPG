@@ -13,6 +13,7 @@
 #include <vector>
 #include <limits>
 #include <conio.h>
+#include <thread>
 
 #define NOMINMAX // Esto es para evitar conflicto con el windows.h ya que define min y max como macros y eso me rompia el codigo
 
@@ -91,6 +92,13 @@ void TextoOmitible(std::string texto, int velocidad)
 		std::cout.flush();
 		Sleep(velocidad);
 	}
+}
+
+void reproducirMusicaConRetraso(const wchar_t* musica, int retrasoMs) {
+	std::thread([musica, retrasoMs]() {
+		Sleep(retrasoMs);
+		PlaySound(musica, NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+		}).detach();
 }
 
 // Clase que representa un item del juego.
@@ -415,7 +423,7 @@ public:
 		if (experiencia >= 100) {
 			experiencia = 0;
 			nivel++;
-			danio += 5;
+			danio += 10;
 
 			std::cout << "Subiste a nivel " << nivel << "." << std::endl;
 			std::cout << "Tu danio aumento a " << danio << "." << std::endl;
@@ -1286,7 +1294,7 @@ public:
 		std::string inicioCombate = "COMBATE CONTRA: " + enemigo.obtenerNombre();
 		TextoOmitible(inicioCombate, 100);
 
-		Sleep(800);
+		Sleep(500);
 
 		PlaySound(NULL, 0, 0);
 		PlaySound(musicaCombate.c_str(), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
@@ -1295,7 +1303,7 @@ public:
 		while (heroe.estaVivo() && enemigo.estaVivo()) {
 			std::cout << std::endl;
 			heroe.mostrarEstadoCombate();
-			std::cout << "\nEnemigo: " << enemigo.obtenerNombre() << std::endl;
+			std::cout << "\n----- Enemigo -----" << std::endl;
 			std::cout << "Vida enemigo: " << enemigo.obtenerVida() << "/" << enemigo.obtenerVidaMaxima() << std::endl;
 			std::cout << "Danio enemigo: " << enemigo.obtenerDanio() << std::endl;
 			std::cout << std::endl;
@@ -1309,7 +1317,7 @@ public:
 			if (opcionTurno == 1) {
 				std::cout << "\nEl HEROE ataca y hace " << heroe.obtenerDanio() << " de danio." << std::endl;
 				enemigo.recibirDanio(heroe.obtenerDanio());
-				std::cout << "Vida restante de " << enemigo.obtenerNombre() << ": " << enemigo.obtenerVida() << std::endl;
+				std::cout << "Vida restante del Enemigo" << ": " << enemigo.obtenerVida() << std::endl;
 			}
 			// Este else if permite abrir el inventario en medio del combate.
 			else if (opcionTurno == 2) {
@@ -1343,7 +1351,7 @@ public:
 				danioReal = 0;
 			}
 
-			std::cout << enemigo.obtenerNombre() << " ataca y hace " << danioEnemigo << " de danio." << std::endl;
+			std::cout << enemigo.obtenerNombre() << ", ataca y hace " << danioEnemigo << " de danio." << std::endl;
 
 			if (defensaHeroe > 0) {
 				std::cout << "Tu armadura reduce " << defensaHeroe << " de danio." << std::endl;
@@ -1443,6 +1451,8 @@ public:
 			TextoOmitible(finalOcultoParte1, 65);
 			PresionaParaContinuar();
 			system("cls");
+
+			PlaySound(TEXT("Snare Awaiting.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
 
@@ -1552,10 +1562,11 @@ public:
 
 			TextoOmitible(finalOcultoParte3, 55);
 			PresionaParaContinuar();
+			PlaySound(NULL, 0, 0);
 			system("cls");
 
 			// Aqui empieza la musica dramatica para los pensamientos del HEROE.
-			PlaySound(TEXT("Who Will Know.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+			reproducirMusicaConRetraso(L"Who Will Know.wav", 10000);
 
 			std::cout << "\n----- FINAL OCULTO -----" << std::endl;
 
@@ -1767,7 +1778,23 @@ public:
 			PlaySound(TEXT("Stars At Our Backs.wav"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 			std::cout << "\n----- FINAL BUENO -----" << std::endl;
-			std::cout << "Derrotaste al Rey Demonio y salvaste el reino." << std::endl;
+			std::string mensajeFinalBueno =
+				"\nAbyssandros finalmente habia sido derrotado."
+
+				"\n\nEl Rey Demonio cayo ante el HEROE, y con el tambien cayo el peso de una guerra que habia consumido al reino durante demasiado tiempo."
+				"\nPor un instante, el silencio lleno el salon del trono, como si el propio mundo necesitara un momento para comprender que todo habia terminado."
+
+				"\n\nTras incontables batallas, fortalezas derribadas y enemigos vencidos, el HEROE por fin habia llegado hasta el final de su viaje."
+				"\nLa oscuridad que cubria la tierra comenzaba a desvanecerse."
+
+				"\n\nCon la muerte del Rey Demonio, el ejercito invasor empezo a perder su fuerza."
+				"\nLos sobrevivientes del reino, poco a poco, comenzaron a levantarse entre las ruinas con una nueva esperanza en sus corazones."
+
+				"\n\nLa paz no regreso de inmediato, pero por primera vez en mucho tiempo, parecia posible."
+				"\nY asi, el nombre del HEROE fue recordado para siempre como el guerrero que derroto al soberano del abismo"
+				"\ny devolvio al reino la oportunidad de vivir una vez mas en paz.\n";
+			
+				TextoOmitible(mensajeFinalBueno, 35);
 		}
 	}
 };
@@ -1781,7 +1808,7 @@ int main()
 	Enemigo general1("General 1 - Venedictuz Decimuz", 100, 10, 100);
 	Enemigo general2("General 2 - Karg' Aalh", 200, 15, 100);
 	Enemigo general3("General 3 - Zhimingde", 300, 20, 100);
-	Enemigo reyDemonio("Abyssandros - Rey Demonio - Soberano del abismo", 500, 30, 0);
+	Enemigo reyDemonio("Abyssandros - Rey Demonio - Soberano del Abismo", 500, 30, 0);
 
 	// Se crea el objeto Juego, que conecta al heroe con enemigos y sistemas del juego.
 	Juego juego(heroe, general1, general2, general3, reyDemonio);
@@ -1799,10 +1826,10 @@ int main()
 		"\n\nel rey humano ante tal situacion hizo todo lo posible para defender a su reino, mando a su ejercito"
 		"\ny mando a llamar a incontables heroes para que derrotaran a los cuatro generales y al REY DEMONIO;"
 		"\nuchos ya han muerto intentando poner fin a esta guerra pero ninguno lo a logrado"
-		"\npero un dia un autoproclamado HEROE se presenta frente al palacio diciendo que el junto a su compañero: PIMPI"
+		"\npero un dia un autoproclamado HEROE se presenta frente al palacio diciendo que el junto a su companiero: PIMPI"
 		"\nseran los que pondran fin a esta guerra y traeran nuevamente una era de paz"
 		"\n\nel rey ante tal discurso se queda conmovido y le da al heroe \"500\" de oro para que pueda emprender su viaje"
-		"\nasi el HEROE junto con su compañero iniciaron su viaje en direccion al castillo del primer general\n\n";
+		"\nasi el HEROE junto con su companiero iniciaron su viaje en direccion al castillo del primer general\n\n";
 
 	TextoOmitible(Prologo, 75);
 	PresionaParaContinuar();
@@ -1811,7 +1838,7 @@ int main()
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Knights of Favonius"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	std::string textoIntermedio1 =
 		"\nLos primeros dias de viaje estuvieron marcados por caminos destruidos, humo en el horizonte y los restos de aldeas"
@@ -1840,10 +1867,10 @@ int main()
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Voyage of the Black Crystal"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	std::string presentacionGeneral1 =
-		"\nuna risa grave y exagerada retumbo por toda la fortaleza"
+		"\nUna risa grave y exagerada retumbo por toda la fortaleza"
 
 		"\n\nla enorme figura salio de entre las sombras mostrando por fin su grotesca silueta : un demonio gigantesco"
 		"\nancho como una muralla cubierto de lujosos adornos, y con una mirada cargada de burla y arrogancia"
@@ -1895,7 +1922,7 @@ int main()
 		"\n\nAun asi, el HEROE no dio un paso atras"
 		"\nEl siguiente campamento lo aguardaba, y con el, la ruta hacia una nueva batalla\n";
 
-	TextoOmitible(mensajePostGeneral1, 75);
+	TextoOmitible(mensajePostGeneral1, 35);
 	PresionaParaContinuar();
 	system("cls");
 
@@ -1904,7 +1931,7 @@ int main()
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("The Temple Conquered by Death"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// AUN POR MEJORAR
 	std::string textoIntermedio2 =
@@ -1913,7 +1940,7 @@ int main()
 
 		"\n\ntras un breve descanso, el HEROE retomo el camino, esta vez se dirigio"
 		"\na los territorios que estaban activamente en guerras"
-		"\ny combates, dejando atras las ruinas ruinas donde estaba y en su lugar llendo hacia enormes campos de batalla"
+		"\ny combates, dejando atras las ruinas donde estaba y en su lugar llendo hacia enormes campos de batalla"
 		"\ncubiertos de armas rotas, armaduras partidas y restos de incontables enfrentamientos"
 
 		"\n\nya no eran solo grupos de demonios sueltas las que salian a detenerlo"
@@ -1934,14 +1961,14 @@ int main()
 
 		"\n\ny en medio de ese silencio, una voz profunda y firme resono desde el frente\n\n"; 
 
-	TextoOmitible(textoIntermedio2, 75);
+	TextoOmitible(textoIntermedio2, 35);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Fortification of Resistance"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// AUN POR MEJORAR
 	std::string presentacionGeneral2 =
@@ -1972,7 +1999,7 @@ int main()
 		"\n\n- \"Vamos, HEROE muestrame si de verdad eres digno de todo este caos que has provocado"
 		"\nespero que, al menos, seas una pelea memorable.....\"\n\n";
 
-	TextoOmitible(presentacionGeneral2, 75);
+	TextoOmitible(presentacionGeneral2, 55);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);
@@ -1981,7 +2008,7 @@ int main()
 
 	// Segundo combate.
 	// Si pierde, se muestra derrota y termina el programa.
-	if (!juego.combate(general2, L"Out of Tartarus.wav")) {
+	if (!juego.combate(general2, L"No Escape")) {
 		PlaySound(NULL, 0, 0);
 		PlaySound(TEXT("Derrota.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		juego.verificarFinal();
@@ -2006,7 +2033,7 @@ int main()
 		"\n\nSin detenerse demasiado, el HEROE siguio adelante"
 		"\nTodavia quedaba un general mas... y despues de el, el propio Rey Demonio.\n";
 
-	TextoOmitible(mensajePostGeneral2, 75);
+	TextoOmitible(mensajePostGeneral2, 35);
 	PresionaParaContinuar();
 	system("cls");
 
@@ -2015,7 +2042,7 @@ int main()
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Cold Night"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// AUN POR MEJORAR
 	std::string textoIntermedio3 =
@@ -2044,13 +2071,13 @@ int main()
 
 		"\n\nentonces, una voz elegante y serena surgio de entre las sombras\n\n";
 
-	TextoOmitible(textoIntermedio3, 75);
+	TextoOmitible(textoIntermedio3, 35);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Qui me freine a un tel moment"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	std::string presentacionGeneral3 =
 		"Desde la oscuridad emergio una figura alta y delgada"
@@ -2084,7 +2111,7 @@ int main()
 		"\ny por eso, por el bien de mi rey y de nuestro pueblo..."
 		"\ntu historia debe terminar aqui.\"\n\n";
 
-	TextoOmitible(presentacionGeneral3, 75);
+	TextoOmitible(presentacionGeneral3, 55);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);
@@ -2118,7 +2145,7 @@ int main()
 		"\nDespues de eso, ya no habria mas descanso..."
 		"\nsolo el encuentro inevitable con El Rey Demonio.\n";
 
-	TextoOmitible(mensajePostGeneral3, 75);
+	TextoOmitible(mensajePostGeneral3, 35);
 	PresionaParaContinuar();
 	system("cls");
 
@@ -2127,7 +2154,7 @@ int main()
 
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Prophetie of Predestination"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	// AUN POR MEJORAR
 	std::string textoIntermedio4 =
@@ -2141,7 +2168,7 @@ int main()
 
 		"\n\nel HEROE avanzo por caminos oscuros, atravesando restos de fortalezas,"
 		"\ntemplos derruidos y ciudades consumidas por la guerra"
-		"\naun en ese ultimo tramo, cualquier demonio que estuviera cerca ya lo reconocian como el asesino de demonios"
+		"\naun en ese ultimo tramo, cualquier demonio que estuviera cerca ya lo reconocian como el asesino inmparable"
 		"\npor ende no intentaban pararlo porque sabian que era poderoso y peligroso, aun asi habia otros que intentaban pararlo"
 		"\na su mala suertee pero aunque alguno se atreviera a interponerse era derribado sin ninguna dificultad"
 		"\npara el HEROE ya no eran mas que obstaculos en el camino hacia su destino"
@@ -2158,19 +2185,19 @@ int main()
 
 		"\n\ny sentado frente a la inmensidad del salon, aguardaba por fin el rey de los demonios...\n\n";
 
-	TextoOmitible(textoIntermedio4, 75);
+	TextoOmitible(textoIntermedio4, 55);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);
 	system("cls");
 
-	PlaySound(TEXT(""), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("DEX 1200"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	std::string presentacionReyDemonio =
-		"Sobre un trono oscuro, tallado con una elegancia antigua y sombria, descansaba la figura del Rey Demonio"
+		"Sobre un trono oscuro, tallado con una elegancia antigua y sombria, descansaba la figura del Rey de los Demonios"
 
-		"\n\nEl Rey Demonio no se parecia a los monstruos salvajes ni a las bestias grotescas que el HEROE habia ido dejando atras"
-		"\nsu sola presencia imponia una autoridad distinta : la de un verdadero monarca"
+		"\n\nEl Rey no se parecia a los monstruos salvajes ni a las bestias grotescas que el HEROE habia ido dejando atras"
+		"\nsu sola presencia imponia una autoridad distinta: la de un verdadero monarca"
 
 		"\n\nde porte impecable, mirada serena y voz profunda, El Rey Demonio observo al HEROE sin rastro de desesperacion,"
 		"\nni siquiera despues de haber perdido a sus tres generales y a varios de sus subditos"
@@ -2188,11 +2215,18 @@ int main()
 		"\n\n- \"Seguramente has venido convencido de que esta es una historia sencilla"
 		"\nlos humanos como las victimas"
 		"\nlos demonios como los invasores y destructores de su hogar"
-		"\nY tu como el heroe destinado a salvarlos todos\""
+		"\nY tu como el gran heroe destinado a salvarlos todos\""
 
-		"\n\ndurante unos segundos, el Rey Demonio guardo silencio, como si midiera el peso de las palabras que estaba a punto de pronunciar y suspiro"
+		"\n\ndurante unos segundos, el Rey Demonio guardo silencio,"
+		"\ncomo si midiera el peso de las palabras que estaba a punto de pronunciar y suspiro";
 
-		"\n\n- \"Pero esta guerra no comenzo por simple ambicion"
+		TextoOmitible(presentacionReyDemonio, 55);
+		PresionaParaContinuar();
+
+		system("cls");
+
+		std::string revelaciondelReyDemonio =
+		"\n- \"Pero esta guerra no comenzo por simple ambicion"
 		"\nni por hambre de conquista"
 		"\nni por un deseo vacio de destruccion\""
 
@@ -2200,7 +2234,8 @@ int main()
 
 		"\n\n- \"Desde hace generaciones, en lo profundo de nuestro reino se transmitio una antigua leyenda..."
 		"\nla profecia de que un dia un ser de inigualable poder surgiria desde la superficie"
-		"\nun ser que arrasaria todo a su paso sin piedad y descenderia hacia el abismo, condenando a mi pueblo a la aniquilacion total\""
+		"\nun ser que arrasaria todo a su paso sin piedad y descenderia hacia el abismo,"
+		"\ncondenando a mi pueblo a la aniquilacion total\""
 
 		"\n\nEl Rey avanzo unos pasos mas, manteniendo aquella calma casi inquebrantable"
 
@@ -2213,13 +2248,13 @@ int main()
 		"\nno por crueldad"
 		"\nno por placer"
 		"\nsino para destruir la amenaza que un dia destruiria a los mios"
-		"\ny romper las cadenas de miedo de mi pueblo, trayendo finalmente la paz a mi Reino\""
+		"\ny romper las cadenas de miedo que la leyenda traia sobre mi pueblo, trayendo finalmente la paz a mi Reino\""
 
 		"\n\nel Rey Demonio extendio ligeramente una mano, como si con ese gesto abarcara toda la guerra que habia consumido ambos mundos"
 
 		"\n\n- \"Cada uno de mis generales cumplio un papel para sostener ese plan"
-		"\nVenedictuz Decimuz mantuvo el control sobre los territorios sometidos y contuvo cualquier resistencia que pudiera desviar nuestra atencion"
-		"\nKarg' Aalh arrazo y conquisto, para eliminar cualquier amenza que se alzara contra nosotros"
+		"\nVenedictuz mantuvo el control sobre los territorios sometidos y contuvo cualquier resistencia que pudiera desviar nuestra atencion"
+		"\nKarg' Aalh arrazo y conquisto, para eliminar cualquier amenaza que se alzara contra nosotros"
 		"\nZhimingde observo, analizo y planeo, buscando con precision el rastro de aquello que traeria el fin a nuestra raza\""
 
 		"\n\nentonces su mirada se clavo aun mas sobre el HEROE"
@@ -2248,7 +2283,7 @@ int main()
 		"\ndemuestrame si tu voluntad es mas fuerte que la desesperacion de un rey..."
 		"\no perece aqui..., ante Abyssandros, soberano del abismo\"\n\n";
 
-	TextoOmitible(presentacionReyDemonio, 75);
+	TextoOmitible(revelaciondelReyDemonio, 55);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);

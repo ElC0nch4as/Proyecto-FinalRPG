@@ -97,7 +97,7 @@ void TextoOmitible(std::string texto, int velocidad)
 void reproducirMusicaConRetraso(const wchar_t* musica, int retrasoMs) {
 	std::thread([musica, retrasoMs]() {
 		Sleep(retrasoMs);
-		PlaySound(musica, NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+		PlaySound(musica, NULL, SND_FILENAME | SND_ASYNC);
 		}).detach();
 }
 
@@ -229,6 +229,69 @@ public:
 	}
 };
 
+
+// Clase del enemigo.
+// Tambien hereda de Personaje y añade la experiencia que entrega al ser derrotado.
+class Enemigo : public Personaje {
+	int expQueDa;
+	bool envenenado;
+	int turnosVeneno;
+	int danioVeneno;
+	bool congelado;
+
+public:
+	Enemigo(std::string param_nombre, int param_vida, int param_danio, int param_expQueDa) : Personaje(param_nombre, param_vida, param_danio) {
+		expQueDa = param_expQueDa;
+		envenenado = false;
+		turnosVeneno = 0;
+		danioVeneno = 0;
+		congelado = false;
+	}
+
+	void aplicarVeneno(int cantidadDanio, int cantidadTurnos) {
+		envenenado = true;
+		danioVeneno = cantidadDanio;
+		turnosVeneno = cantidadTurnos;
+	}
+
+	bool estaEnvenenado() {
+		return envenenado;
+	}
+
+	void procesarVeneno() {
+		if (envenenado) {
+			recibirDanio(danioVeneno);
+			std::cout << "Enemigo sufre " << danioVeneno
+				<< " de danio por veneno." << std::endl;
+
+			turnosVeneno--;
+
+			if (turnosVeneno <= 0) {
+				envenenado = false;
+				danioVeneno = 0;
+				std::cout << "El enemigo ya no esta envenenado." << std::endl;
+			}
+		}
+	}
+
+	void congelar() {
+		congelado = true;
+	}
+
+	bool estaCongelado() {
+		return congelado;
+	}
+
+	void quitarCongelado() {
+		congelado = false;
+	}
+
+	// Regresa la experiencia que otorga el enemigo.
+	int obtenerExpQueDa() {
+		return expQueDa;
+	}
+};
+
 // Clase del jugador principal.
 // Hereda de Personaje y agrega nivel, experiencia, oro e inventario.
 class Heroe : public Personaje {
@@ -246,6 +309,9 @@ class Heroe : public Personaje {
 
 	int bonoEspada;
 	int bonoArmadura;
+
+	int defensaSiguienteGolpe;
+	int buffFuerzaCombate;
 
 	std::string espadaEquipada;
 	std::string armaduraEquipada;
@@ -269,6 +335,8 @@ public:
 		bonoArmadura = 0;
 		espadaEquipada = "Ninguna";
 		armaduraEquipada = "Ninguna";
+		defensaSiguienteGolpe = 0;
+		buffFuerzaCombate = 0;
 
 		inventario.push_back(Item("PIMPI", "PIMPI", 0, 0, 1, false));
 	}
@@ -399,6 +467,40 @@ public:
 		}
 	}
 
+	void activarDeff(int cantidad) {
+		defensaSiguienteGolpe = cantidad;
+		std::cout << "Usaste Poushon defensa. El siguiente golpe sera mitigado por "
+			<< cantidad << " de danio." << std::endl;
+	}
+
+	int obtenerDeffSiguienteGolpe() {
+		return defensaSiguienteGolpe;
+	}
+
+	void gastarEscudo() {
+		defensaSiguienteGolpe = 0;
+	}
+
+	void activarBuffFuerzaCombate(int cantidad) {
+		if (buffFuerzaCombate == 0) {
+			danio += cantidad;
+			buffFuerzaCombate = cantidad;
+			std::cout << "Usaste Poushon fuerza. Tu danio aumento +"
+				<< cantidad << " durante este combate." << std::endl;
+		}
+		else {
+			std::cout << "Ya tienes activa una Poushon fuerza en este combate." << std::endl;
+		}
+	}
+
+	void terminarBuffFuerzaCombate() {
+		if (buffFuerzaCombate > 0) {
+			danio -= buffFuerzaCombate;
+			buffFuerzaCombate = 0;
+			std::cout << "El efecto de la Poushon fuerza se acabo." << std::endl;
+		}
+	}
+
 	int obtenerBonoArmadura() {
 		return bonoArmadura;
 	}
@@ -434,9 +536,9 @@ public:
 	void activarBuffCampamento() {
 		// Este if evita que el buff se active dos veces seguidas.
 		if (!buffCampamentoActivo) {
-			danio += 2;
+			danio += 5;
 			buffCampamentoActivo = true;
-			std::cout << "Te buffaste. Tu danio aumento temporalmente +2." << std::endl;
+			std::cout << "Te buffaste. Tu danio aumento temporalmente +5." << std::endl;
 		}
 		else {
 			std::cout << "Ya tienes el buff activo." << std::endl;
@@ -447,7 +549,7 @@ public:
 	void terminarBuffCampamento() {
 		// Este if verifica si realmente habia un buff activo antes de quitarlo.
 		if (buffCampamentoActivo) {
-			danio -= 2;
+			danio -= 5;
 			buffCampamentoActivo = false;
 			std::cout << "El buff se acabo." << std::endl;
 		}
@@ -548,7 +650,7 @@ public:
 			std::cout << "Curacion exacta: +" << valorItem << " de vida." << std::endl;
 		}
 		else if (nombreItem == "Poushon fuerza") {
-			std::cout << "Descripcion: Aumenta el danio del HEROE." << std::endl;
+			std::cout << "Descripcion: Aumenta el danio del HEROE, durante la pelea." << std::endl;
 			std::cout << "Aumento exacto: +" << valorItem << " de danio." << std::endl;
 		}
 		else if (nombreItem == "Poushon fuego") {
@@ -556,16 +658,16 @@ public:
 			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
 		}
 		else if (nombreItem == "Poushon hielo") {
-			std::cout << "Descripcion: Poushon ofensiva de hielo." << std::endl;
+			std::cout << "Descripcion: Poushon ofensiva de hielo que congela al enemigo 1 turno." << std::endl;
 			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
 		}
 		else if (nombreItem == "Poushon veneno") {
 			std::cout << "Descripcion: Poushon ofensiva de veneno." << std::endl;
 			std::cout << "Danio estimado: " << valorItem << " al objetivo." << std::endl;
 		}
-		else if (nombreItem == "Poushon mana") {
-			std::cout << "Descripcion: Poushon misteriosa." << std::endl;
-			std::cout << "Valor interno: " << valorItem << "." << std::endl;
+		else if (nombreItem == "Poushon defensa") {
+			std::cout << "Descripcion: Mitiga el siguiente golpe recibido." << std::endl;
+			std::cout << "Mitigacion exacta: 20 de danio." << std::endl;
 		}
 		else if (tipoItem == "espada") {
 			std::cout << "Descripcion: Arma que aumenta el ataque del HEROE." << std::endl;
@@ -628,34 +730,47 @@ public:
 	}
 
 	// Usa una poushon durante el combate.
-	void usarPoushonEnCombate(int posicion) {
-		// Este if evita acceder a una posicion invalida del inventario.
+	void usarPoushonEnCombate(int posicion, Enemigo& enemigo) {
 		if (!slotValidoInventario(posicion)) {
 			std::cout << "Opcion invalida." << std::endl;
 			return;
 		}
 
-		// Este if verifica que el objeto sea una poushon.
 		if (inventario[posicion].obtenerTipo() == "poushon") {
-			// Este if aplica curacion si es poushon de salud.
-			if (inventario[posicion].obtenerNombre() == "Poushon salud") {
-				curarCantidad(inventario[posicion].obtenerValor());
-				std::cout << "Usaste Poushon salud. Recuperaste " << inventario[posicion].obtenerValor() << " de vida." << std::endl;
+			std::string nombrePoushon = inventario[posicion].obtenerNombre();
+			int valorPoushon = inventario[posicion].obtenerValor();
+
+			if (nombrePoushon == "Poushon salud") {
+				curarCantidad(valorPoushon);
+				std::cout << "Usaste Poushon salud. Recuperaste "
+					<< valorPoushon << " de vida." << std::endl;
 			}
-			// Este else if aplica buff de daño si es poushon de fuerza.
-			else if (inventario[posicion].obtenerNombre() == "Poushon fuerza") {
-				danio += inventario[posicion].obtenerValor();
-				std::cout << "Usaste Poushon fuerza. Tu danio aumento +" << inventario[posicion].obtenerValor() << " en este combate." << std::endl;
+			else if (nombrePoushon == "Poushon mana (cambiar despues)" || nombrePoushon == "Poushon barrera") {
+				activarDeff(20);
 			}
-			// Este else cubre las otras poushons.
+			else if (nombrePoushon == "Poushon fuerza") {
+				activarBuffFuerzaCombate(valorPoushon);
+			}
+			else if (nombrePoushon == "Poushon veneno") {
+				enemigo.aplicarVeneno(10, 3);
+				std::cout << "Usaste Poushon veneno contra el enemigo y ahora esta envenenado." << std::endl;
+			}
+			else if (nombrePoushon == "Poushon hielo") {
+				enemigo.recibirDanio(valorPoushon);
+				enemigo.congelar();
+				std::cout << "Usaste Poushon hielo. Hiciste " << valorPoushon
+					<< " de danio y el enemigo perdera su siguiente turno." << std::endl;
+			}
+			else if (nombrePoushon == "Poushon fuego") {
+				enemigo.recibirDanio(valorPoushon);
+				std::cout << "Usaste Poushon fuego. Hiciste " << valorPoushon
+					<< " de danio al enemigo." << std::endl;
+			}
 			else {
-				std::cout << "Usaste " << inventario[posicion].obtenerNombre() << "." << std::endl;
+				std::cout << "Usaste " << nombrePoushon << "." << std::endl;
 			}
 
-			// Se consume una unidad de la poushon usada.
 			inventario[posicion].restarCantidad(1);
-
-			// Si ya no quedan unidades, se elimina del inventario.
 			eliminarItemSiCantidadCero(posicion);
 		}
 		else {
@@ -731,25 +846,9 @@ public:
 	}
 };
 
-// Clase del enemigo.
-// Tambien hereda de Personaje y añade la experiencia que entrega al ser derrotado.
-class Enemigo : public Personaje {
-	int expQueDa;
-
-public:
-	Enemigo(std::string param_nombre, int param_vida, int param_danio, int param_expQueDa)
-		: Personaje(param_nombre, param_vida, param_danio) {
-		expQueDa = param_expQueDa;
-	}
-
-	// Regresa la experiencia que otorga el enemigo.
-	int obtenerExpQueDa() {
-		return expQueDa;
-	}
-};
 
 // Clase de la tienda.
-// En este avance se enfoca en vender poushons. (Por ahora)
+// En este avance se enfoca en vender poushons.
 class Tienda {
 	std::vector<Item> poushons;
 	std::vector<Item> equipo;
@@ -758,21 +857,21 @@ public:
 	// Constructor de la tienda.
 	// Aqui se crean las poushons disponibles.
 	Tienda() {
-		equipo.push_back(Item("Espada oxidada", "espada", 3, 40, 1, false));
-		equipo.push_back(Item("Espada de acero", "espada", 6, 80, 1, false));
-		equipo.push_back(Item("Espada legendaria", "espada", 10, 120, 1, false));
+		equipo.push_back(Item("Espada oxidada", "espada", 2, 30, 1, false));
+		equipo.push_back(Item("Espada de acero", "espada", 5, 80, 1, false));
+		equipo.push_back(Item("Espada legendaria", "espada", 10, 150, 1, false));
 
-		equipo.push_back(Item("Armadura rota", "armadura", 1, 30, 1, false));
-		equipo.push_back(Item("Armadura de hierro", "armadura", 2, 60, 1, false));
-		equipo.push_back(Item("Armadura divina", "armadura", 3, 100, 1, false));
+		equipo.push_back(Item("Armadura oxidada", "armadura", 2, 30, 1, false));
+		equipo.push_back(Item("Armadura de acero", "armadura", 5, 80, 1, false));
+		equipo.push_back(Item("Armadura divina", "armadura", 10, 150, 1, false));
 
-		poushons.push_back(Item("Poushon salud", "poushon", 20, 20, 3, false));
-		poushons.push_back(Item("Poushon mana", "poushon", 10, 15, 3, false));
-		poushons.push_back(Item("Poushon fuerza", "poushon", 2, 25, 2, false));
-		poushons.push_back(Item("Poushon veneno", "poushon", 5, 15, 2, false));
-		poushons.push_back(Item("Poushon hielo", "poushon", 5, 15, 2, false));
-		poushons.push_back(Item("Poushon fuego", "poushon", 5, 15, 2, false));
-		poushons.push_back(Item("¿¿¿¿¿?????", "especial", 0, 10, 1, true));
+		poushons.push_back(Item("Poushon salud", "poushon", 40, 40, 5, false));
+		poushons.push_back(Item("Poushon defensa", "poushon", 20, 60, 3, false));
+		poushons.push_back(Item("Poushon fuerza", "poushon", 10, 100, 2, false));
+		poushons.push_back(Item("Poushon veneno", "poushon", 10, 50, 5, false));
+		poushons.push_back(Item("Poushon hielo", "poushon", 30, 75, 2, false));
+		poushons.push_back(Item("Poushon fuego", "poushon", 50, 100, 2, false));
+		poushons.push_back(Item("?????", "especial", 0, 10, 1, true));
 	}
 
 	void mostrarEquipo() {
@@ -1056,7 +1155,7 @@ public:
 	}
 
 	// Inventario que se puede abrir durante un combate.
-	void inventarioCombate() {
+	void inventarioCombate(Enemigo& enemigo) {
 		int opcion = 0;
 
 		// Este while mantiene abierto el inventario hasta que el jugador decida salir.
@@ -1114,7 +1213,7 @@ public:
 						}
 					}
 					else if (tipoItem == "poushon") {
-						heroe.usarPoushonEnCombate(slot);
+						heroe.usarPoushonEnCombate(slot, enemigo);
 						break;
 					}
 					// Este else if impide usar equipo como si fuera consumible.
@@ -1321,31 +1420,51 @@ public:
 			}
 			// Este else if permite abrir el inventario en medio del combate.
 			else if (opcionTurno == 2) {
-				inventarioCombate();
+				inventarioCombate(enemigo);
 			}
 			else {
 				std::cout << "Opcion invalida. Pierdes el turno." << std::endl;
 			}
 
-			// Este if revisa si el enemigo murio despues del turno del heroe.
+			// Efecto de veneno al inicio del turno enemigo
+			if (enemigo.estaEnvenenado()) {
+				enemigo.procesarVeneno();
+				std::cout << "Vida restante del Enemigo: " << enemigo.obtenerVida() << std::endl;
+			}
+
 			if (!enemigo.estaVivo()) {
 				system("cls");
 				std::cout << "Derrotaste a " << enemigo.obtenerNombre() << "." << std::endl;
 
-				// Este if da experiencia solo si el enemigo esta configurado para darla.
 				if (enemigo.obtenerExpQueDa() > 0) {
 					heroe.ganarExp(enemigo.obtenerExpQueDa());
 				}
 
 				heroe.terminarBuffCampamento();
+				heroe.terminarBuffFuerzaCombate();
 				heroe.terminarUsoPIMPI();
 				return true;
+			}
+
+			// Si esta congelado, pierde turno
+			if (enemigo.estaCongelado()) {
+				std::cout << "El enemigo esta congelado y pierde este turno." << std::endl;
+				enemigo.quitarCongelado();
+				continue;
 			}
 
 			// Si el enemigo sigue vivo, entonces le toca atacar.
 			int danioEnemigo = enemigo.obtenerDanio();
 			int defensaHeroe = heroe.obtenerBonoArmadura();
+			int MitigacionHeroe = heroe.obtenerDeffSiguienteGolpe();
+
 			int danioReal = danioEnemigo - defensaHeroe;
+
+			if (MitigacionHeroe > 0) {
+				std::cout << "La barrera mitiga " << MitigacionHeroe << " de danio." << std::endl;
+				danioReal -= MitigacionHeroe;
+				heroe.gastarEscudo();
+			}
 
 			if (danioReal < 0) {
 				danioReal = 0;
@@ -1365,6 +1484,7 @@ public:
 			if (!heroe.estaVivo()) {
 				system("cls");
 				std::cout << "El HEROE ha sido derrotado." << std::endl;
+				heroe.terminarBuffFuerzaCombate();
 				return false;
 			}
 		}
@@ -1802,7 +1922,7 @@ public:
 int main()
 {
 	// Se crea el heroe principal con vida, daño y oro inicial.
-	Heroe heroe("HEROE", 100, 300, 500);
+	Heroe heroe("HEROE", 100, 10, 500);
 
 	// Se crean los enemigos principales del juego con su vida, daño y experiencia otorgada.
 	Enemigo general1("General 1 - Venedictuz Decimuz", 100, 10, 100);

@@ -306,6 +306,8 @@ class Heroe : public Personaje {
 	bool PIMPIComido;
 	bool PIMPIEquipado;
 	bool PIMPIAlimentado;
+	bool PIMPIBuffDefensaActivo;
+	bool PIMPIMacizoActivo;
 
 	int bonoEspada;
 	int bonoArmadura;
@@ -331,6 +333,8 @@ public:
 		PIMPIComido = false;
 		PIMPIEquipado = false;
 		PIMPIAlimentado = false;
+		PIMPIBuffDefensaActivo = false;
+		PIMPIMacizoActivo = false;
 		bonoEspada = 0;
 		bonoArmadura = 0;
 		espadaEquipada = "Ninguna";
@@ -399,25 +403,22 @@ public:
 	}
 
 	void usodePIMPI() {
-		if (PIMPI && !PIMPIActivo) {
-			danio += 1;
-			PIMPIActivo = true;
-			PIMPIEquipado = true;
-			std::cout << "Usaste a PIMPI. Tu danio aumento +1 durante este combate." << std::endl;
-		}
-		else if (!PIMPI) {
-			std::cout << "Ya no esta PIMPI." << std::endl;
-		}
-		else {
-			std::cout << "PIMPI ya esta siendo usado en este combate." << std::endl;
-		}
+		usarPIMPIEnCombate();
 	}
 
 	void terminarUsoPIMPI() {
 		if (PIMPIActivo) {
-			danio -= 1;
+			if (PIMPIMacizoActivo) {
+				danio -= 2;
+			}
+			else {
+				danio -= 1;
+			}
+
 			PIMPIActivo = false;
 			PIMPI = false;
+			PIMPIEquipado = false;
+			PIMPIMacizoActivo = false;
 
 			for (int i = 0; i < inventario.size(); i++) {
 				if (inventario[i].obtenerNombre() == "PIMPI") {
@@ -428,8 +429,114 @@ public:
 
 			std::cout << std::endl;
 			std::cout << "PIMPI lucho con gran valor durante el combate..." << std::endl;
-			std::cout << "pero desafortunadamente sus heridas fueron graves." << std::endl;
+			std::cout << "pero desafortunadamente sus heridas fueron demasiado graves." << std::endl;
 			std::cout << "PIMPI murio por lesiones severas..." << std::endl;
+		}
+	}
+
+	void usarPoushonEnPIMPI(int posicion) {
+		if (!slotValidoInventario(posicion)) {
+			std::cout << "Opcion invalida." << std::endl;
+			return;
+		}
+
+		if (!PIMPI) {
+			std::cout << "Ya no esta PIMPI." << std::endl;
+			return;
+		}
+
+		std::string nombrePoushon = inventario[posicion].obtenerNombre();
+
+		// Primero se consume la poushon ANTES de alterar a PIMPI
+		inventario[posicion].restarCantidad(1);
+		eliminarItemSiCantidadCero(posicion);
+
+		if (nombrePoushon == "Poushon salud") {
+			std::cout << "PIMPI se siente aliviado, te lo agradece y frota su cabeza contra ti en senial de carinio." << std::endl;
+		}
+		else if (nombrePoushon == "Poushon fuego") {
+			std::cout << "PIMPI murio instantaneamente por combustion espontanea y trono como fuego artificial." << std::endl;
+			std::cout << "Fue impresionante de presenciar." << std::endl;
+			convertirPIMPIEnObjeto("Asado de PIMPI", "poushon", 30, 0, 1);
+		}
+		else if (nombrePoushon == "Poushon fuerza") {
+			activarPIMPIMacizo();
+		}
+		else if (nombrePoushon == "Poushon hielo") {
+			std::cout << "PIMPI se congelo de forma tan impresionante que ahora esta atrapado en un ladrillo de hielo." << std::endl;
+			convertirPIMPIEnObjeto("Tempano de PIMPI", "poushon", 40, 0, 1);
+		}
+		else if (nombrePoushon == "Poushon veneno") {
+			std::cout << "PIMPI se intoxico y escupio repetidamente varias bolas de pelo." << std::endl;
+			std::cout << "PIMPI se murio por falta de pelo y exposicion al aire y luz solar." << std::endl;
+			matarPIMPI();
+			agregarItem(Item("Bola de pelo", "recuerdo", 0, 0, 20, false));
+		}
+		else if (nombrePoushon == "Poushon defensa") {
+			usarPIMPIProtector();
+		}
+		else {
+			std::cout << "PIMPI no reacciono de forma especial." << std::endl;
+		}
+	}
+
+	bool getPIMPIBuffDefensaActivo() {
+		return PIMPIBuffDefensaActivo;
+	}
+
+	void desactivarPIMPIBuffDefensa() {
+		PIMPIBuffDefensaActivo = false;
+	}
+
+	void matarPIMPI() {
+		PIMPI = false;
+		PIMPIActivo = false;
+		PIMPIEquipado = false;
+		PIMPIBuffDefensaActivo = false;
+		PIMPIMacizoActivo = false;
+
+		for (int i = 0; i < inventario.size(); i++) {
+			if (inventario[i].obtenerNombre() == "PIMPI") {
+				inventario.erase(inventario.begin() + i);
+				break;
+			}
+		}
+	}
+
+	void convertirPIMPIEnObjeto(std::string nombreNuevo, std::string tipoNuevo, int valorNuevo, int precioNuevo, int cantidadNueva) {
+		matarPIMPI();
+		agregarItem(Item(nombreNuevo, tipoNuevo, valorNuevo, precioNuevo, cantidadNueva, false));
+	}
+
+	void usarPIMPIProtector() {
+		PIMPIBuffDefensaActivo = true;
+		std::cout << "PIMPI ahora se siente seguro de protegerte." << std::endl;
+	}
+
+	void activarPIMPIMacizo() {
+		PIMPIMacizoActivo = true;
+		std::cout << "PIMPI de repente se puso macizo y empezo a hacer poses raras frente a los demas." << std::endl;
+	}
+
+	void usarPIMPIEnCombate() {
+		if (PIMPI && !PIMPIActivo) {
+			if (PIMPIMacizoActivo) {
+				danio += 2;
+				std::cout << "Usaste a PIMPI macizo. Tu danio aumento +2 durante este combate." << std::endl;
+			}
+			else {
+				danio += 1;
+				std::cout << "Usaste a PIMPI. Tu danio aumento +1 durante este combate." << std::endl;
+			}
+
+			PIMPIActivo = true;
+			PIMPIEquipado = true;
+		}
+		else if (!PIMPI) {
+			std::cout << "Ya no esta PIMPI." << std::endl;
+		}
+		else {
+			std::cout << "PIMPI ya esta siendo usado en este combate." << std::endl;
 		}
 	}
 
@@ -677,6 +784,17 @@ public:
 			std::cout << "Descripcion: Equipo defensivo." << std::endl;
 			std::cout << "Bono exacto: +" << valorItem << " de defensa/proteccion." << std::endl;
 		}
+		else if (nombreItem == "Asado de PIMPI") {
+			std::cout << "Descripcion: Carne bien cocida de PIMPI (aunque un poco chamuscada huele bien)." << std::endl;
+			std::cout << "Curacion exacta: +30 de vida." << std::endl;
+		}
+		else if (nombreItem == "Tempano de PIMPI") {
+			std::cout << "Descripcion: PIMPI quedo atrapado en un bloque de hielo." << std::endl;
+			std::cout << "Danio exacto: 40 al enemigo en combate." << std::endl;
+		}
+		else if (nombreItem == "Bola de pelo") {
+			std::cout << "Descripcion: Son bolas de pelo de PIMPI, no se pueden usar en combate, pero al menos tienes recuerdos de PIMPI para estar calentito por la noche." << std::endl;
+		}
 		else {
 			std::cout << "Descripcion: Objeto sin informacion registrada." << std::endl;
 		}
@@ -701,28 +819,37 @@ public:
 			return;
 		}
 
-		// Este if verifica que el objeto elegido sea del tipo poushon.
+		std::string nombreItem = inventario[posicion].obtenerNombre();
+
 		if (inventario[posicion].obtenerTipo() == "poushon") {
-			// Este if identifica especificamente la poushon de salud.
-			if (inventario[posicion].obtenerNombre() == "Poushon salud") {
+			if (nombreItem == "Poushon salud") {
 				curarCantidad(inventario[posicion].obtenerValor());
-				std::cout << "Usaste Poushon salud. Recuperaste " << inventario[posicion].obtenerValor() << " de vida." << std::endl;
+				std::cout << "Usaste Poushon salud. Recuperaste "
+					<< inventario[posicion].obtenerValor() << " de vida." << std::endl;
 			}
-			// Este else if identifica la poushon de fuerza.
-			else if (inventario[posicion].obtenerNombre() == "Poushon fuerza") {
+			else if (nombreItem == "Poushon fuerza") {
 				danio += inventario[posicion].obtenerValor();
-				std::cout << "Usaste Poushon fuerza. Tu danio aumento +" << inventario[posicion].obtenerValor() << "." << std::endl;
+				std::cout << "Usaste Poushon fuerza. Tu danio aumento +"
+					<< inventario[posicion].obtenerValor() << "." << std::endl;
 			}
-			// Este else cubre el resto de poushons.
+			else if (nombreItem == "Asado de PIMPI") {
+				curarCantidad(inventario[posicion].obtenerValor());
+				std::cout << "Consumiste Asado de PIMPI. Recuperaste "
+					<< inventario[posicion].obtenerValor() << " de vida." << std::endl;
+			}
+			else if (nombreItem == "Tempano de PIMPI") {
+				std::cout << "Tempano de PIMPI solo se puede usar en combate." << std::endl;
+				return;
+			}
 			else {
-				std::cout << "Usaste " << inventario[posicion].obtenerNombre() << "." << std::endl;
+				std::cout << "Usaste " << nombreItem << "." << std::endl;
 			}
 
-			// Se consume una unidad del item usado.
 			inventario[posicion].restarCantidad(1);
-
-			// Si se acabaron, se elimina del inventario.
 			eliminarItemSiCantidadCero(posicion);
+		}
+		else if (nombreItem == "Bola de pelo") {
+			std::cout << "No puedes usar la Bola de pelo. Solo son recuerdos de PIMPI." << std::endl;
 		}
 		else {
 			std::cout << "Ese objeto no se usa asi fuera de combate." << std::endl;
@@ -736,42 +863,58 @@ public:
 			return;
 		}
 
+		std::string nombreItem = inventario[posicion].obtenerNombre();
+
 		if (inventario[posicion].obtenerTipo() == "poushon") {
-			std::string nombrePoushon = inventario[posicion].obtenerNombre();
 			int valorPoushon = inventario[posicion].obtenerValor();
 
-			if (nombrePoushon == "Poushon salud") {
+			if (nombreItem == "Poushon salud") {
 				curarCantidad(valorPoushon);
 				std::cout << "Usaste Poushon salud. Recuperaste "
 					<< valorPoushon << " de vida." << std::endl;
 			}
-			else if (nombrePoushon == "Poushon mana (cambiar despues)" || nombrePoushon == "Poushon barrera") {
+			else if (nombreItem == "Poushon defensa") {
 				activarDeff(20);
 			}
-			else if (nombrePoushon == "Poushon fuerza") {
+			else if (nombreItem == "Poushon fuerza") {
 				activarBuffFuerzaCombate(valorPoushon);
 			}
-			else if (nombrePoushon == "Poushon veneno") {
+			else if (nombreItem == "Poushon veneno") {
 				enemigo.aplicarVeneno(10, 3);
 				std::cout << "Usaste Poushon veneno contra el enemigo y ahora esta envenenado." << std::endl;
 			}
-			else if (nombrePoushon == "Poushon hielo") {
+			else if (nombreItem == "Poushon hielo") {
 				enemigo.recibirDanio(valorPoushon);
 				enemigo.congelar();
 				std::cout << "Usaste Poushon hielo. Hiciste " << valorPoushon
-					<< " de danio y el enemigo perdera su siguiente turno." << std::endl;
+					<< " de danio y el enemigo se congelo." << std::endl;
 			}
-			else if (nombrePoushon == "Poushon fuego") {
+			else if (nombreItem == "Poushon fuego") {
 				enemigo.recibirDanio(valorPoushon);
 				std::cout << "Usaste Poushon fuego. Hiciste " << valorPoushon
 					<< " de danio al enemigo." << std::endl;
 			}
+			else if (nombreItem == "Tempano de PIMPI") {
+				enemigo.recibirDanio(valorPoushon);
+				std::cout << "Lanzaste Tempano de PIMPI al enemigo y le hiciste "
+					<< valorPoushon << " de danio." << std::endl;
+				std::cout << "PIMPI incluso congelado y destruido en pedacitos despues de chocar contra el enemigo cumplio su funcion." << std::endl;
+				std::cout << "Su alma asciende al cielo. PIMPI se va feliz y con frio." << std::endl;
+			}
+			else if (nombreItem == "Asado de PIMPI") {
+				curarCantidad(valorPoushon);
+				std::cout << "Consumiste Asado de PIMPI. Recuperaste "
+					<< valorPoushon << " de vida." << std::endl;
+			}
 			else {
-				std::cout << "Usaste " << nombrePoushon << "." << std::endl;
+				std::cout << "Usaste " << nombreItem << "." << std::endl;
 			}
 
 			inventario[posicion].restarCantidad(1);
 			eliminarItemSiCantidadCero(posicion);
+		}
+		else if (nombreItem == "Bola de pelo") {
+			std::cout << "No puedes usar la Bola de pelo en combate." << std::endl;
 		}
 		else {
 			std::cout << "Ese objeto no se usa asi en combate." << std::endl;
@@ -857,20 +1000,20 @@ public:
 	// Constructor de la tienda.
 	// Aqui se crean las poushons disponibles.
 	Tienda() {
-		equipo.push_back(Item("Espada oxidada", "espada", 2, 30, 1, false));
-		equipo.push_back(Item("Espada de acero", "espada", 5, 80, 1, false));
+		equipo.push_back(Item("Espada oxidada", "espada", 2, 25, 1, false));
+		equipo.push_back(Item("Espada de acero", "espada", 5, 75, 1, false));
 		equipo.push_back(Item("Espada legendaria", "espada", 10, 150, 1, false));
 
-		equipo.push_back(Item("Armadura oxidada", "armadura", 2, 30, 1, false));
-		equipo.push_back(Item("Armadura de acero", "armadura", 5, 80, 1, false));
+		equipo.push_back(Item("Armadura oxidada", "armadura", 2, 25, 1, false));
+		equipo.push_back(Item("Armadura de acero", "armadura", 5, 75, 1, false));
 		equipo.push_back(Item("Armadura divina", "armadura", 10, 150, 1, false));
 
-		poushons.push_back(Item("Poushon salud", "poushon", 40, 40, 5, false));
-		poushons.push_back(Item("Poushon defensa", "poushon", 20, 60, 3, false));
+		poushons.push_back(Item("Poushon salud", "poushon", 50, 40, 5, false));
+		poushons.push_back(Item("Poushon defensa", "poushon", 20, 20, 3, false));
 		poushons.push_back(Item("Poushon fuerza", "poushon", 10, 100, 2, false));
-		poushons.push_back(Item("Poushon veneno", "poushon", 10, 50, 5, false));
-		poushons.push_back(Item("Poushon hielo", "poushon", 30, 75, 2, false));
-		poushons.push_back(Item("Poushon fuego", "poushon", 50, 100, 2, false));
+		poushons.push_back(Item("Poushon veneno", "poushon", 10, 20, 4, false));
+		poushons.push_back(Item("Poushon hielo", "poushon", 35, 50, 3, false));
+		poushons.push_back(Item("Poushon fuego", "poushon", 100, 100, 2, false));
 		poushons.push_back(Item("?????", "especial", 0, 10, 1, true));
 	}
 
@@ -1213,8 +1356,30 @@ public:
 						}
 					}
 					else if (tipoItem == "poushon") {
-						heroe.usarPoushonEnCombate(slot, enemigo);
-						break;
+						if (heroe.getPIMPI()) {
+							int objetivo = 0;
+							std::cout << "1. Usar en HEROE" << std::endl;
+							std::cout << "2. Usar en PIMPI" << std::endl;
+
+							objetivo = pedirNumero("En quien deseas usar la poushon?");
+							std::cout << std::endl;
+
+							if (objetivo == 1) {
+								heroe.usarPoushonEnCombate(slot, enemigo);
+								break;
+							}
+							else if (objetivo == 2) {
+								heroe.usarPoushonEnPIMPI(slot);
+								break;
+							}
+							else {
+								std::cout << "Opcion invalida." << std::endl;
+							}
+						}
+						else {
+							heroe.usarPoushonEnCombate(slot, enemigo);
+							break;
+						}
 					}
 					// Este else if impide usar equipo como si fuera consumible.
 					else if (tipoItem == "espada" || tipoItem == "armadura") {
@@ -1299,7 +1464,31 @@ public:
 						}
 					}
 					else if (tipoItem == "poushon") {
-						heroe.usarPoushonFueraDeCombate(slot);
+						if (heroe.getPIMPI()) {
+							int objetivo = 0;
+							std::cout << "1. Usar en HEROE" << std::endl;
+							std::cout << "2. Usar en PIMPI" << std::endl;
+							std::cout << "3. Cancelar" << std::endl;
+
+							objetivo = pedirNumero("En quien deseas usar la poushon?");
+							std::cout << std::endl;
+
+							if (objetivo == 1) {
+								heroe.usarPoushonFueraDeCombate(slot);
+							}
+							else if (objetivo == 2) {
+								heroe.usarPoushonEnPIMPI(slot);
+							}
+							else if (objetivo == 3) {
+								std::cout << "Accion cancelada." << std::endl;
+							}
+							else {
+								std::cout << "Opcion invalida." << std::endl;
+							}
+						}
+						else {
+							heroe.usarPoushonFueraDeCombate(slot);
+						}
 					}
 					else if (tipoItem == "especial") {
 						heroe.usarObjetoSecretoDesdeInventario(slot);
@@ -1414,15 +1603,20 @@ public:
 
 			// Este if corresponde al ataque basico del heroe.
 			if (opcionTurno == 1) {
+				system("cls");
 				std::cout << "\nEl HEROE ataca y hace " << heroe.obtenerDanio() << " de danio." << std::endl;
 				enemigo.recibirDanio(heroe.obtenerDanio());
 				std::cout << "Vida restante del Enemigo" << ": " << enemigo.obtenerVida() << std::endl;
 			}
 			// Este else if permite abrir el inventario en medio del combate.
 			else if (opcionTurno == 2) {
+				system("cls");
 				inventarioCombate(enemigo);
+				PresionaParaContinuar(); // Este presiona para continuar es simplemente para que se vena las interacciones de los objetos en combate o PIMPI
+				system("cls");
 			}
 			else {
+				system("cls");
 				std::cout << "Opcion invalida. Pierdes el turno." << std::endl;
 			}
 
@@ -1450,6 +1644,14 @@ public:
 			if (enemigo.estaCongelado()) {
 				std::cout << "El enemigo esta congelado y pierde este turno." << std::endl;
 				enemigo.quitarCongelado();
+				continue;
+			}
+
+			if (heroe.getPIMPIBuffDefensaActivo()) {
+				std::cout << "PIMPI uso su propio cuerpo para protegerte del impacto." << std::endl;
+				std::cout << "PIMPI murio." << std::endl;
+				heroe.matarPIMPI();
+				heroe.desactivarPIMPIBuffDefensa();
 				continue;
 			}
 
@@ -2197,7 +2399,7 @@ int main()
 	PlaySound(NULL, 0, 0);
 	system("cls");
 
-	PlaySound(TEXT("Qui me freine a un tel moment"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+	PlaySound(TEXT("Les voici ! Voici le duo !"), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 
 	std::string presentacionGeneral3 =
 		"Desde la oscuridad emergio una figura alta y delgada"
@@ -2305,7 +2507,7 @@ int main()
 
 		"\n\ny sentado frente a la inmensidad del salon, aguardaba por fin el rey de los demonios...\n\n";
 
-	TextoOmitible(textoIntermedio4, 55);
+	TextoOmitible(textoIntermedio4, 35);
 	PresionaParaContinuar();
 
 	PlaySound(NULL, 0, 0);

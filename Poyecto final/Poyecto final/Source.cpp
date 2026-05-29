@@ -234,42 +234,38 @@ public:
 // Tambien hereda de Personaje y añade la experiencia que entrega al ser derrotado.
 class Enemigo : public Personaje {
 	int expQueDa;
-	bool envenenado;
-	int turnosVeneno;
-	int danioVeneno;
+	std::vector<int> cargasVeneno;
 	bool congelado;
 
 public:
 	Enemigo(std::string param_nombre, int param_vida, int param_danio, int param_expQueDa) : Personaje(param_nombre, param_vida, param_danio) {
 		expQueDa = param_expQueDa;
-		envenenado = false;
-		turnosVeneno = 0;
-		danioVeneno = 0;
 		congelado = false;
 	}
 
-	void aplicarVeneno(int cantidadDanio, int cantidadTurnos) {
-		envenenado = true;
-		danioVeneno = cantidadDanio;
-		turnosVeneno = cantidadTurnos;
+	void aplicarVeneno() {
+		// Cada poushon veneno deja 2 ticks pendientes
+		// porque el primer danio se hace al lanzarla.
+		cargasVeneno.push_back(2);
 	}
 
 	bool estaEnvenenado() {
-		return envenenado;
+		return !cargasVeneno.empty();
 	}
 
 	void procesarVeneno() {
-		if (envenenado) {
-			recibirDanio(danioVeneno);
-			std::cout << "Enemigo sufre " << danioVeneno
-				<< " de danio por veneno." << std::endl;
+		for (int i = 0; i < cargasVeneno.size(); i++) {
+			recibirDanio(10);
+			std::cout << "El enemigo esta envenenado y recibe 10 de danio." << std::endl;
+			cargasVeneno[i]--;
+		}
 
-			turnosVeneno--;
-
-			if (turnosVeneno <= 0) {
-				envenenado = false;
-				danioVeneno = 0;
-				std::cout << "El enemigo ya no esta envenenado." << std::endl;
+		for (int i = 0; i < cargasVeneno.size();) {
+			if (cargasVeneno[i] <= 0) {
+				cargasVeneno.erase(cargasVeneno.begin() + i);
+			}
+			else {
+				i++;
 			}
 		}
 	}
@@ -880,8 +876,10 @@ public:
 				activarBuffFuerzaCombate(valorPoushon);
 			}
 			else if (nombreItem == "Poushon veneno") {
-				enemigo.aplicarVeneno(10, 3);
-				std::cout << "Usaste Poushon veneno contra el enemigo y ahora esta envenenado." << std::endl;
+				enemigo.recibirDanio(10);
+				enemigo.aplicarVeneno();
+				std::cout << "Usaste Poushon veneno contra el enemigo." << std::endl;
+				std::cout << "Le hiciste 10 de danio y ahora esta envenenado." << std::endl;
 			}
 			else if (nombreItem == "Poushon hielo") {
 				enemigo.recibirDanio(valorPoushon);
@@ -1358,7 +1356,7 @@ public:
 					else if (tipoItem == "poushon") {
 						if (heroe.getPIMPI()) {
 							int objetivo = 0;
-							std::cout << "1. Usar en HEROE" << std::endl;
+							std::cout << "1. Usar" << std::endl;
 							std::cout << "2. Usar en PIMPI" << std::endl;
 
 							objetivo = pedirNumero("En quien deseas usar la poushon?");
@@ -1466,7 +1464,7 @@ public:
 					else if (tipoItem == "poushon") {
 						if (heroe.getPIMPI()) {
 							int objetivo = 0;
-							std::cout << "1. Usar en HEROE" << std::endl;
+							std::cout << "1. Usar" << std::endl;
 							std::cout << "2. Usar en PIMPI" << std::endl;
 							std::cout << "3. Cancelar" << std::endl;
 

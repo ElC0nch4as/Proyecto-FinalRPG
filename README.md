@@ -370,8 +370,6 @@
 
 # Este proyecto utiliza archivos de audio en formato `.wav` para reproducir musica y efectos durante la partida.  
 
-# Para que el sonido funcione correctamente, es necesario \*\*mantener la estructura de carpetas del proyecto\*\*.
-
 # 
 
 # \### Estructura esperada
@@ -406,11 +404,11 @@
 
 # \### Nota
 
-# No es necesario mover manualmente los audios a `x64/Debug` ni a `Release`, siempre y cuando las rutas del codigo apunten correctamente a la carpeta `Audio`.
+# Es necesario mover manualmente los archivos de audio/musica a `x64/Debug` donde se encuentra el ejecutable (.exe)
 
 # 
 
-# Si los archivos de audio no estan presentes o la estructura de carpetas cambia, el juego seguira ejecutandose, pero no reproducira musica.
+# Si los archivos de audio no estan presentes en el ejecutable, el juego seguira ejecutandose, pero no reproducira musica y en vez de eso se escuchara un sonido de advertencia.
 
 # 
 
